@@ -9,14 +9,19 @@ class Community extends Model
 {
     use HasFactory;
 
-    public function user()
+    public function userOwner()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function member()
+    // public function member()
+    // {
+    //     return $this->hasMany(Member::class);
+    // }
+
+    public function members()
     {
-        return $this->hasMany(Member::class);
+        return $this->belongsToMany(User::class, 'members', 'community_id', 'user_id');
     }
 
     public function post()

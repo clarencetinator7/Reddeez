@@ -28,6 +28,8 @@ Route::post('/logout', AuthController::class . '@logout');
 
 Route::group(['prefix' => 'u', 'middleware' => 'auth:sanctum'], function () {
     Route::post('/{username}', UserController::class . '@getUserProfile');
+    Route::post('/{id}', UserController::class . '@getUserWithId');
+    Route::post('/{id}/communities', UserController::class . '@getUserCommunities');
 });
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');

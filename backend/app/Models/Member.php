@@ -9,13 +9,13 @@ class Member extends Model
 {
     use HasFactory;
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
-    public function community()
-    {
-        return $this->belongsTo(Community::class);
-    }
+    // public function community()
+    // {
+    //     return $this->belongsTo(Community::class);
+    // }
 }
