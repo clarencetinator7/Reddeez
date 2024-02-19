@@ -74,7 +74,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function changeDisplayName(Request $request)
+    public function updateDisplayName(Request $request)
     {
 
         $validatedData = $request->validate([

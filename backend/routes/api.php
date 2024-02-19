@@ -32,7 +32,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
     Route::post('/{id}/communities', UserController::class . '@getUserCommunities')->where('id', '[0-9]+');
 
     // User Profiles
-    Route::post('/updateDisplayName', UserController::class . '@changeDisplayName');
+    Route::post('/updateDisplayName', UserController::class . '@updateDisplayName');
+    Route::post('/updateAvatar', UserController::class . '@updateDisplayName');
 });
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');
