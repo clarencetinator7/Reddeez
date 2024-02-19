@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommunityCollection;
-use App\Http\Resources\CommunityResource;
 use App\Http\Resources\UserResource;
-use App\Models\Community;
-use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -72,5 +69,79 @@ class UserController extends Controller
             // 'data' => new CommunityCollection($community)
             'data' => $user
         ], 200);
+    }
+
+    public function updateDisplayName(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'displayName' => 'required|string'
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if ($user->display_name === $validatedData['displayName']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Display name is the same'
+            ], 400);
+        }
+
+        $user->display_name = $validatedData['displayName'];
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Display name updated',
+            'data' => new UserResource($user)
+        ], 200);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+
+
+        if ($request->hasFile('avatar')) {
+
+            if ($user->avatar) {
+                // $avatarPath = storage_path('app/public/avatars/' . $user->id . '/' . $user->avatar);
+                $avatarPath = storage_path('app/public/' . $user->avatar);
+                if (file_exists($avatarPath)) {
+                    unlink($avatarPath);
+                }
+            }
+
+            $avatar = $request->file('avatar');
+            $avatar = Storage::disk('public')->put('avatars/' . $user->id, $avatar);
+
+            $user->avatar = $avatar;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Avatar updated',
+                'data' => new UserResource($user)
+            ], 200);
+        }
     }
 }
