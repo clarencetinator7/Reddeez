@@ -73,4 +73,37 @@ class UserController extends Controller
             'data' => $user
         ], 200);
     }
+
+    public function changeDisplayName(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'displayName' => 'required|string'
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if ($user->display_name === $validatedData['displayName']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Display name is the same'
+            ], 400);
+        }
+
+        $user->display_name = $validatedData['displayName'];
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Display name updated',
+            'data' => new UserResource($user)
+        ], 200);
+    }
 }

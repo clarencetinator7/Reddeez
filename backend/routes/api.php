@@ -26,10 +26,13 @@ Route::post('/register', AuthController::class . '@register');
 Route::post('/login', AuthController::class . '@login');
 Route::post('/logout', AuthController::class . '@logout');
 
-Route::group(['prefix' => 'u', 'middleware' => 'auth:sanctum'], function () {
-    Route::post('/{username}', UserController::class . '@getUserProfile');
-    Route::post('/{id}', UserController::class . '@getUserWithId');
-    Route::post('/{id}/communities', UserController::class . '@getUserCommunities');
+Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
+    // Route::post('/{username}', UserController::class . '@getUserProfile');
+    Route::post('/{id}', UserController::class . '@getUserWithId')->where('id', '[0-9]+');
+    Route::post('/{id}/communities', UserController::class . '@getUserCommunities')->where('id', '[0-9]+');
+
+    // User Profiles
+    Route::post('/updateDisplayName', UserController::class . '@changeDisplayName');
 });
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');
