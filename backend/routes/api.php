@@ -39,6 +39,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
 
 Route::group(['prefix' => 'community'], function () {
     Route::post('/create', CommunityController::class . '@createCommunity')->middleware('auth:sanctum');
+    Route::post('/{id}/updateDescription', CommunityController::class . '@updateDescription')->where('id', '[0-9]+')->middleware('auth:sanctum');
 });
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');
