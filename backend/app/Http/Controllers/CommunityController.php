@@ -76,4 +76,33 @@ class CommunityController extends Controller
 
         return new PostCollection($posts->paginate(5));
     }
+
+    public function joinCommunity(Request $request)
+    {
+        $user = User::findOrfail(auth()->id());
+        $community = Community::findOrfail($request->id);
+
+        // Check if the user owns the community        
+        if ($user->community()->find($community->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is the owner of the community'
+            ], 400);
+        }
+
+        // Check if the user is already a member of the community
+        if ($community->members()->find($user->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User already in community'
+            ], 400);
+        }
+
+        $community->members()->attach($user->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User joined community',
+        ], 200);
+    }
 }
