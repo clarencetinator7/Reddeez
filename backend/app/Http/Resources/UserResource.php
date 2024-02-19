@@ -20,8 +20,13 @@ class UserResource extends JsonResource
             'displayName' => $this->display_name,
             'email' => $this->email,
             'avatar' => $this->avatar,
-
             'post' => PostResource::collection($this->whenLoaded('post')),
+            'pivot' => $this->whenPivotLoaded('members', function () {
+                return [
+                    'communityId' => $this->pivot->community_id,
+                    'joineDate' => $this->pivot->created_at,
+                ];
+            }),
         ];
     }
 }

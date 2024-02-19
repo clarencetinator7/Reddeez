@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,17 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
     // User Profiles
     Route::post('/updateDisplayName', UserController::class . '@updateDisplayName');
     Route::post('/updateAvatar', UserController::class . '@updateAvatar');
+});
+
+Route::group(['prefix' => 'community'], function () {
+    Route::post('/create', CommunityController::class . '@createCommunity')->middleware('auth:sanctum');
+    Route::post('/{id}/updateDescription', CommunityController::class . '@updateDescription')->where('id', '[0-9]+')->middleware('auth:sanctum');
+
+    Route::post('/{id}/join', CommunityController::class . '@joinCommunity')->where('id', '[0-9]+')->middleware('auth:sanctum');
+    Route::post('/{id}/leave', CommunityController::class . '@leaveCommunity')->where('id', '[0-9]+')->middleware('auth:sanctum');
+
+    Route::post('/{id}/members', CommunityController::class . '@getCommunityMembers')->where('id', '[0-9]+');
+    Route::post('/{id}/posts', CommunityController::class . '@getCommunityPosts')->where('id', '[0-9]+');
 });
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');

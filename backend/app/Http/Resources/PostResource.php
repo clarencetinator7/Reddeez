@@ -19,10 +19,11 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
-            'userId' => $this->user_id,
             'communityId' => $this->community_id,
             // 'user' => new UserResource($this->user),
             // 'community' => Community::find($this->community_id),
+            'postedBy' => new UserResource($this->whenLoaded('user')),
+            'community' => new CommunityResource($this->whenLoaded('community')),
         ];
     }
 }
