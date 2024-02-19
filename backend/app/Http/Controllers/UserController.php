@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommunityCollection;
-use App\Http\Resources\CommunityResource;
 use App\Http\Resources\UserResource;
-use App\Models\Community;
-use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
