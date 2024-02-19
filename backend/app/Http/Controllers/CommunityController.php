@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Community;
 use App\Http\Requests\StoreCommunityRequest;
 use App\Http\Requests\UpdateCommunityRequest;
+use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -52,6 +53,18 @@ class CommunityController extends Controller
             'status' => 'success',
             'message' => 'Community found',
             'data' => $community
+        ], 200);
+    }
+
+    public function getCommunityMembers(Request $request)
+    {
+        $members = Community::findOrfail($request->id)->members;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Community members found',
+            'data' => new UserCollection($members)
+            // 'data' => $members
         ], 200);
     }
 }
