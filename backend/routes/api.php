@@ -33,7 +33,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
 
     // User Profiles
     Route::post('/updateDisplayName', UserController::class . '@updateDisplayName');
-    Route::post('/updateAvatar', UserController::class . '@updateDisplayName');
+    Route::post('/updateAvatar', UserController::class . '@updateAvatar');
 });
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');
