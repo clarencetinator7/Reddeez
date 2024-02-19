@@ -42,6 +42,7 @@ Route::group(['prefix' => 'community'], function () {
     Route::post('/{id}/updateDescription', CommunityController::class . '@updateDescription')->where('id', '[0-9]+')->middleware('auth:sanctum');
 
     Route::post('/{id}/join', CommunityController::class . '@joinCommunity')->where('id', '[0-9]+')->middleware('auth:sanctum');
+    Route::post('/{id}/leave', CommunityController::class . '@leaveCommunity')->where('id', '[0-9]+')->middleware('auth:sanctum');
 
     Route::post('/{id}/members', CommunityController::class . '@getCommunityMembers')->where('id', '[0-9]+');
     Route::post('/{id}/posts', CommunityController::class . '@getCommunityPosts')->where('id', '[0-9]+');

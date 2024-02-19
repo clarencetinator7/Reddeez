@@ -105,4 +105,31 @@ class CommunityController extends Controller
             'message' => 'User joined community',
         ], 200);
     }
+
+    public function leaveCommunity(Request $request)
+    {
+        $user = User::findOrfail(auth()->id());
+        $community = Community::findOrfail($request->id);
+
+        if ($user->community()->find($community->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You can\'t leave a community you own'
+            ], 400);
+        }
+
+        if (!$community->members()->find($user->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is not a member of the community'
+            ], 400);
+        }
+
+        $user->joinedCommunities()->detach($community->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User left community',
+        ], 200);
+    }
 }
