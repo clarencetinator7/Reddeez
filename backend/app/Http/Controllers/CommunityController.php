@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Community;
 use App\Http\Requests\StoreCommunityRequest;
 use App\Http\Requests\UpdateCommunityRequest;
+use App\Http\Resources\CommunityCollection;
+use App\Http\Resources\PostCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,5 +68,12 @@ class CommunityController extends Controller
             'data' => new UserCollection($members)
             // 'data' => $members
         ], 200);
+    }
+
+    public function getCommunityPosts(Request $request)
+    {
+        $posts = Community::findOrfail($request->id)->post()->with('user');
+
+        return new PostCollection($posts->paginate(5));
     }
 }
