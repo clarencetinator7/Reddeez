@@ -61,6 +61,7 @@ Route::group(['prefix' => 'post'], function () {
     Route::post('/{id}', PostController::class . '@getPost')->where('id', '[0-9]+');
 });
 
+use App\Http\Requests\UpdateCommentRequest;
 Route::group(['prefix' => 'comment', 'middleware' => 'auth:sanctum'], function () {
     Route::post('/{id}/reply', CommentController::class . '@replyToComment')->where('id', '[0-9]+');
 });

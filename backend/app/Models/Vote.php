@@ -13,4 +13,9 @@ class Vote extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function voteable()
+    {
+        return $this->morphTo();
+    }
 }

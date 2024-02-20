@@ -37,4 +37,9 @@ class Comment extends Model
     {
         return $this->children()->with('replies');
     }
+
+    public function votes()
+    {
+        return $this->morphMany(Vote::class, 'voteable');
+    }
 }
