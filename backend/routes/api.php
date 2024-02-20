@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -54,9 +55,17 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
     Route::post('/create', PostController::class . '@createPost');
     Route::post('/{id}/edit', PostController::class . '@editPost')->where('id', '[0-9]+');
     Route::post('/{id}/archive', PostController::class . '@archivePost')->where('id', '[0-9]+');
+    Route::post('/{id}/writeComment', CommentController::class . '@commentOnPost')->where('id', '[0-9]+');
 });
 Route::group(['prefix' => 'post'], function () {
     Route::post('/{id}', PostController::class . '@getPost')->where('id', '[0-9]+');
 });
+
+Route::group(['prefix' => 'comment', 'middleware' => 'auth:sanctum'], function () {
+    // Route::post('/{postId}/post', CommentController::class . '@commentOnPost')->where('id', '[0-9]+');
+    // Route::post('/{id}/reply', PostController::class . '@replyToComment')->where('id', '[0-9]+');
+    // Route::post('/{id}/archive', PostController::class . '@archiveComment')->where('id', '[0-9]+');
+});
+
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');

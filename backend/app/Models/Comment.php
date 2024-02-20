@@ -10,6 +10,13 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'body',
+        'commentable_id',
+        'commentable_type',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -21,13 +28,8 @@ class Comment extends Model
     }
 
     // Polymorphic relationship to self
-    public function parent()
-    {
-        return $this->belongsTo(Comment::class, 'parent_id');
-    }
-
     public function children() // Replies
     {
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->morphToMany(Comment::class, 'commentable');
     }
 }

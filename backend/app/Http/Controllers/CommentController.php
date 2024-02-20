@@ -5,62 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Models\Post;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function commentOnPost(Request $request)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'body' => 'required',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCommentRequest $request)
-    {
-        //
-    }
+        $comment = new Comment($validatedData);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
+        $post = Post::find($request->id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCommentRequest $request, Comment $comment)
-    {
-        //
-    }
+        $post->comment()->create([
+            'user_id' => auth()->id(),
+            'body' => $validatedData['body'],
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Comment $comment)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment created',
+            'data' => $comment
+        ], 201);
     }
 }
