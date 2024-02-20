@@ -15,7 +15,7 @@ class Community extends Model
         'user_id'
     ];
 
-    public function userOwner()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

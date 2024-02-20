@@ -28,13 +28,13 @@ class DatabaseSeeder extends Seeder
         User::factory()
             ->count(10)
             ->hasCommunity(1)
-            ->hasMember(5)
+            ->hasJoinedCommunities(5)
             ->create();
 
         Community::factory()
             ->count(10)
-            ->has(User::factory()->count(10))
-            ->has(Member::factory()->count(10))
+            ->hasUser()
+            ->has(Member::factory()->count(5))
             ->has(Post::factory()->count(10))
             ->create();
 
