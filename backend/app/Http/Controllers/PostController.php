@@ -64,7 +64,11 @@ class PostController extends Controller
 
         $includeComments = request()->query('includeComments', false);
 
-        $post = Post::with('user')->find($request->id);
+        $post = Post::with('user')->find($request->id)->loadCount(['votes as upvotes' => function ($query) {
+            $query->where('status', 'U');
+        }, 'votes as downvotes' => function ($query) {
+            $query->where('status', 'D');
+        }]);
 
         if ($includeComments) {
             // Include comments and replies recursively
@@ -82,6 +86,11 @@ class PostController extends Controller
             'success' => true,
             'message' => 'Post found',
             'data' => new PostResource($post)
+            // 'data' => $post->loadCount(['votes as upvotes_count' => function ($query) {
+            //     $query->where('status', 'U');
+            // }, 'votes as downvotes_count' => function ($query) {
+            //     $query->where('status', 'D');
+            // }])
         ], 200);
     }
 
