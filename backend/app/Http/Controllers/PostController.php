@@ -5,62 +5,93 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
+use App\Models\Community;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function createPost(StorePostRequest $request)
     {
-        //
+        $community = Community::find($request->communityId);
+
+        if (!$community) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Community not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post created',
+            'data' => new PostResource(Post::create($request->all()))
+        ], 201);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function editPost(UpdatePostRequest $request)
     {
-        //
+        $user = User::findOrfail(auth()->id());
+        $post = $user->post()->find($request->id);
+
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        $postUpdated = $post->update($request->all());
+
+        if ($postUpdated) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post could not be updated'
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePostRequest $request)
+    public function getPost(Request $request)
     {
-        //
+        $post = Post::with('user')->find($request->id);
+
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post found',
+            'data' => new PostResource($post)
+        ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
+    public function archivePost(Request $request)
     {
-        //
-    }
+        $user = User::findOrfail(auth()->id());
+        $post = $user->post()->find($request->id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePostRequest $request, Post $post)
-    {
-        //
-    }
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Post archived'
+        ], 200);
     }
 }
