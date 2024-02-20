@@ -17,8 +17,6 @@ class CommentController extends Controller
             'body' => 'required',
         ]);
 
-        $comment = new Comment($validatedData);
-
         $post = Post::find($request->id);
 
         if (!$post) {
@@ -28,7 +26,7 @@ class CommentController extends Controller
             ], 404);
         }
 
-        $post->comment()->create([
+        $comment = $post->comment()->create([
             'user_id' => auth()->id(),
             'body' => $validatedData['body'],
         ]);
@@ -37,6 +35,33 @@ class CommentController extends Controller
             'success' => true,
             'message' => 'Comment created',
             'data' => $comment
+        ], 201);
+    }
+
+    public function replyToComment(Request $request)
+    {
+        $validatedData = $request->validate([
+            'body' => 'required',
+        ]);
+
+        $comment = Comment::find($request->id);
+
+        if (!$comment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Comment not found'
+            ], 404);
+        }
+
+        $reply = $comment->children()->create([
+            'user_id' => auth()->id(),
+            'body' => $validatedData['body'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Reply created',
+            'data' => $reply
         ], 201);
     }
 }

@@ -62,8 +62,7 @@ Route::group(['prefix' => 'post'], function () {
 });
 
 Route::group(['prefix' => 'comment', 'middleware' => 'auth:sanctum'], function () {
-    // Route::post('/{postId}/post', CommentController::class . '@commentOnPost')->where('id', '[0-9]+');
-    // Route::post('/{id}/reply', PostController::class . '@replyToComment')->where('id', '[0-9]+');
+    Route::post('/{id}/reply', CommentController::class . '@replyToComment')->where('id', '[0-9]+');
     // Route::post('/{id}/archive', PostController::class . '@archiveComment')->where('id', '[0-9]+');
 });
 

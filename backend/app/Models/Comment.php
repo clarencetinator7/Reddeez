@@ -30,6 +30,6 @@ class Comment extends Model
     // Polymorphic relationship to self
     public function children() // Replies
     {
-        return $this->morphToMany(Comment::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }
