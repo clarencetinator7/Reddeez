@@ -22,7 +22,7 @@ class User extends Authenticatable
         'display_name',
         'email',
         'password',
-        
+
     ];
 
     /**
@@ -49,11 +49,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Community::class);
     }
-
-    // public function member()
-    // {
-    //     return $this->hasMany(Member::class);
-    // }
 
     public function joinedCommunities()
     {

@@ -15,15 +15,10 @@ class Community extends Model
         'user_id'
     ];
 
-    public function userOwner()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    // public function member()
-    // {
-    //     return $this->hasMany(Member::class);
-    // }
 
     public function members()
     {

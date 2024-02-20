@@ -60,7 +60,15 @@ class PostController extends Controller
 
     public function getPost(Request $request)
     {
+
+        $includeComments = request()->query('includeComments', false);
+
         $post = Post::with('user')->find($request->id);
+
+        if ($includeComments) {
+            // Include comments and replies recursively
+            $post->load('comment.replies');
+        }
 
         if (!$post) {
             return response()->json([

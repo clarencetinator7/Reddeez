@@ -3,64 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use App\Http\Requests\StoreCommentRequest;
-use App\Http\Requests\UpdateCommentRequest;
+use App\Models\Post;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function commentOnPost(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'body' => 'required',
+        ]);
+
+        $post = Post::find($request->id);
+
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        $comment = $post->comment()->create([
+            'user_id' => auth()->id(),
+            'body' => $validatedData['body'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment created',
+            'data' => $comment
+        ], 201);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function replyToComment(Request $request)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'body' => 'required',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCommentRequest $request)
-    {
-        //
-    }
+        $comment = Comment::find($request->id);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
+        if (!$comment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Comment not found'
+            ], 404);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
+        $reply = $comment->children()->create([
+            'user_id' => auth()->id(),
+            'body' => $validatedData['body'],
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCommentRequest $request, Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Comment $comment)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Reply created',
+            'data' => $reply
+        ], 201);
     }
 }
