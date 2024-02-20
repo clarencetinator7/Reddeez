@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StorePostRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,18 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'communityId' => 'required|integer',
+            // 'user_id' => 'required|integer'
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'community_id' => $this->communityId,
+            'user_id' => Auth::id()
+        ]);
     }
 }

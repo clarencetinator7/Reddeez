@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Community;
 use App\Http\Requests\StoreCommunityRequest;
+use App\Models\Community;
 use App\Http\Requests\UpdateCommunityRequest;
 use App\Http\Resources\CommunityCollection;
 use App\Http\Resources\PostCollection;
