@@ -32,4 +32,9 @@ class Comment extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+
+    public function replies()
+    {
+        return $this->children()->with('replies');
+    }
 }
