@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Community;
 use App\Models\User;
@@ -30,6 +31,33 @@ class PostController extends Controller
         ], 201);
     }
 
+    public function editPost(UpdatePostRequest $request)
+    {
+        $user = User::findOrfail(auth()->id());
+        $post = $user->post()->find($request->id);
+
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        $postUpdated = $post->update($request->all());
+
+        if ($postUpdated) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post could not be updated'
+            ], 500);
+        }
+    }
+
     public function getPost(Request $request)
     {
         $post = Post::find($request->id);
@@ -53,14 +81,13 @@ class PostController extends Controller
         $user = User::findOrfail(auth()->id());
         $post = $user->post()->find($request->id);
 
+
         if (!$post) {
             return response()->json([
                 'success' => false,
                 'message' => 'Post not found'
             ], 404);
         }
-
-        $post->delete();
 
         return response()->json([
             'success' => true,
