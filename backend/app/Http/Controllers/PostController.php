@@ -60,7 +60,7 @@ class PostController extends Controller
 
     public function getPost(Request $request)
     {
-        $post = Post::find($request->id);
+        $post = Post::with('user')->find($request->id);
 
         if (!$post) {
             return response()->json([
