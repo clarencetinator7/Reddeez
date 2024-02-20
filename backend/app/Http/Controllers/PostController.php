@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Comment;
 use App\Models\Community;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -101,72 +102,5 @@ class PostController extends Controller
             'success' => true,
             'message' => 'Post archived'
         ], 200);
-    }
-
-    public function voteOnPost(Request $request)
-    {
-        $voteStatus = $request->voteStatus;
-        $status = '';
-
-        if ($voteStatus === 'u') {
-            $status = 'U';
-        } else if ($voteStatus === 'd') {
-            $status = 'D';
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid vote status'
-            ], 400);
-        }
-
-        $user = User::findOrfail(auth()->id());
-        $post = Post::find($request->id);
-
-        if (!$post) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Post not found'
-            ], 404);
-        }
-
-        // Check if the user has already voted on the post
-        $existingVote = $post->votes()->where('user_id', $user->id)->first();
-        // if($existingVote['status'] === $status) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'You have already voted'
-        //     ], 400);
-        // } else {
-
-        // }
-
-        if ($existingVote) {
-            // Check if same with the existing vote
-            if ($existingVote->status === $status) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You have already voted'
-                ], 400);
-            } else {
-                $existingVote->update([
-                    'status' => $status
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Vote updated'
-                ], 200);
-            }
-        } else {
-            // Create new record if user has not voted
-            $post->votes()->create([
-                'user_id' => $user->id,
-                'status' => $status
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Vote created'
-            ], 201);
-        }
     }
 }

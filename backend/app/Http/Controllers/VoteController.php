@@ -2,65 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vote;
-use App\Http\Requests\StoreVoteRequest;
-use App\Http\Requests\UpdateVoteRequest;
+use App\Models\Comment;
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class VoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function voteOnVoteable(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'voteStatus' => 'required|string|in:u,d',
+            'type' => 'required|string|in:post,comment'
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $status = null;
+        $voteable = null;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreVoteRequest $request)
-    {
-        //
-    }
+        if ($request->voteStatus === 'u') {
+            $status = 'U';
+        } else if ($request->voteStatus === 'd') {
+            $status = 'D';
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Vote $vote)
-    {
-        //
-    }
+        if ($request->type === 'post') {
+            $voteable = Post::find($request->id);
+        } else if ($request->type === 'comment') {
+            $voteable = Comment::find($request->id);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Vote $vote)
-    {
-        //
-    }
+        $user = User::findOrfail(auth()->id());
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateVoteRequest $request, Vote $vote)
-    {
-        //
-    }
+        if (!$voteable) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voteable not found'
+            ], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Vote $vote)
-    {
-        //
+        // Check if the user has already voted on the post
+        $existingVote = $voteable->votes()->where('user_id', $user->id)->first();
+
+        if ($existingVote) {
+            // Check if same with the existing vote
+            if ($existingVote->status === $status) {
+                $existingVote->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Vote removed'
+                ], 200);
+            } else {
+                $existingVote->update([
+                    'status' => $status
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Vote updated'
+                ], 200);
+            }
+        } else {
+            // Create new record if user has not voted
+            $voteable->votes()->create([
+                'user_id' => $user->id,
+                'status' => $status
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Vote created'
+            ], 201);
+        }
     }
 }
