@@ -53,5 +53,8 @@ Route::group(['prefix' => 'community'], function () {
 Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
     Route::post('/create', PostController::class . '@createPost');
 });
+Route::group(['prefix' => 'post'], function () {
+    Route::post('/{id}', PostController::class . '@getPost')->where('id', '[0-9]+');
+});
 
 // Route::post('/test', AuthController::class . '@test')->middleware('auth:sanctum');
