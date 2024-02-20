@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Community;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommunityResource extends JsonResource
