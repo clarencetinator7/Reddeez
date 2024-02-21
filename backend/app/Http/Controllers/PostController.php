@@ -6,7 +6,6 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
-use App\Models\Comment;
 use App\Models\Community;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -72,7 +71,13 @@ class PostController extends Controller
 
         if ($includeComments) {
             // Include comments and replies recursively
-            $post->load('comment.replies');
+            $post->load(['comment' => function ($query) {
+                $query->with('user')->with('replies')->withCount(['votes as upvotes' => function ($query) {
+                    $query->where('status', 'U');
+                }, 'votes as downvotes' => function ($query) {
+                    $query->where('status', 'D');
+                }]);
+            }]);
         }
 
         if (!$post) {
@@ -86,11 +91,7 @@ class PostController extends Controller
             'success' => true,
             'message' => 'Post found',
             'data' => new PostResource($post)
-            // 'data' => $post->loadCount(['votes as upvotes_count' => function ($query) {
-            //     $query->where('status', 'U');
-            // }, 'votes as downvotes_count' => function ($query) {
-            //     $query->where('status', 'D');
-            // }])
+            // 'data' => $post,
         ], 200);
     }
 
