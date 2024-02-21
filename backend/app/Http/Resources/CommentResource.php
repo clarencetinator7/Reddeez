@@ -20,6 +20,8 @@ class CommentResource extends JsonResource
             'commentedAt' => $this->created_at,
             'user' => new UserResource($this->whenLoaded('user')),
             'replies' => CommentResource::collection($this->whenLoaded('replies')),
+            'upvotes' => $this->upvotes(),
+            'downvotes' => $this->downvotes(),
         ];
     }
 }

@@ -35,6 +35,15 @@ class Comment extends Model
 
     public function replies()
     {
-        return $this->children()->with('replies');
+        return $this->children()->with(['replies', 'user'])->withCount(['votes as upvotes' => function ($query) {
+            $query->where('status', 'U');
+        }, 'votes as downvotes' => function ($query) {
+            $query->where('status', 'D');
+        }]);
+    }
+
+    public function votes()
+    {
+        return $this->morphMany(Vote::class, 'voteable');
     }
 }

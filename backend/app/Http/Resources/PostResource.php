@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Community;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,6 +19,8 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'communityId' => $this->community_id,
+            'upvotes' => $this->upvotes,
+            'downvotes' => $this->downvotes,
             'postedBy' => new UserResource($this->whenLoaded('user')),
             'community' => new CommunityResource($this->whenLoaded('community')),
             'comments' => CommentResource::collection($this->whenLoaded('comment')),

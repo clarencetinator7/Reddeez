@@ -63,11 +63,21 @@ class PostController extends Controller
 
         $includeComments = request()->query('includeComments', false);
 
-        $post = Post::with('user')->find($request->id);
+        $post = Post::with('user')->find($request->id)->loadCount(['votes as upvotes' => function ($query) {
+            $query->where('status', 'U');
+        }, 'votes as downvotes' => function ($query) {
+            $query->where('status', 'D');
+        }]);
 
         if ($includeComments) {
             // Include comments and replies recursively
-            $post->load('comment.replies');
+            $post->load(['comment' => function ($query) {
+                $query->with('user')->with('replies')->withCount(['votes as upvotes' => function ($query) {
+                    $query->where('status', 'U');
+                }, 'votes as downvotes' => function ($query) {
+                    $query->where('status', 'D');
+                }]);
+            }]);
         }
 
         if (!$post) {
@@ -81,6 +91,7 @@ class PostController extends Controller
             'success' => true,
             'message' => 'Post found',
             'data' => new PostResource($post)
+            // 'data' => $post,
         ], 200);
     }
 
