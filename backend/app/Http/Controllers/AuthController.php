@@ -43,29 +43,50 @@ class AuthController extends Controller
         ]);
 
         // LOGIN SPA AUTH
-        if (!auth()->attempt($validateData)) {
+        // if (!auth()->attempt($validateData)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Invalid credentials'
+        //     ], 401);
+        // }
+
+
+        // $request->session()->regenerate();
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Log in successful',
+        //     'user' => new AuthResource(Auth::user())
+        // ]);
+
+        // Token-based auth
+        if (Auth::attempt($validateData)) {
+            /** @var \App\Models\User $user **/
+            $user = Auth::user();
+            $token = $user->createToken('token')->plainTextToken;
             return response()->json([
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
+                'success' => true,
+                'message' => 'Log in successful',
+                'user' => new AuthResource($user),
+                'token' => $token
+            ]);
         }
 
-
-        $request->session()->regenerate();
-
         return response()->json([
-            'success' => true,
-            'message' => 'Log in successful',
-            'user' => new AuthResource(Auth::user())
-        ]);
+            'success' => false,
+            'message' => 'Invalid credentials'
+        ], 401);
     }
 
     public function logout(Request $request)
     {
 
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        // $request->session()->regenerateToken();
+        // SPA Logout
+        // Auth::guard('web')->logout();
+        // $request->session()->invalidate();
+
+        // Token based logout
+        $request->user()->tokens()->delete();
 
         return response()->json([
             'success' => true,
