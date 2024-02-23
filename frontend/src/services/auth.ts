@@ -1,7 +1,6 @@
 "use server";
 
 import { FieldValues } from "react-hook-form";
-import getCSRF from "./csrf";
 import { cookies } from "next/headers";
 
 type TUser = {
@@ -39,4 +38,32 @@ export async function login(data: FieldValues) {
   } else {
     return resData;
   }
+}
+
+export async function logout() {
+  const res = await fetch("http://localhost:8000/api/logout", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+
+  const resData = await res.json();
+
+  console.log(resData);
+
+  if (res.ok) {
+    cookies().set("token", "");
+    cookies().set("userId", "");
+    return { success: true };
+  }
+
+  if (resData.message === "Unauthenticated.") {
+    cookies().delete("token");
+    cookies().delete("userId");
+    return { success: true };
+  }
+
+  return { success: false };
 }
