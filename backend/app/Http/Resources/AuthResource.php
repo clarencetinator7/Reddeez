@@ -17,13 +17,9 @@ class AuthResource extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'success' => true,
-            'message' => 'User created successfully',
-            'user' => [
-                'id' => $this->id,
-                'username' => $this->username,
-                'email' => $this->email,
-            ]
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
         ];
     }
 }

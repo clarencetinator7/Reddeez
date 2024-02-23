@@ -3,39 +3,37 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import getCSRF from "@/services/csrf";
-import { useCookies } from "next-client-cookies";
+import { login } from "@/services/auth";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
-  const cookies = useCookies();
-
   const onSubmitHandler = async (data: FieldValues) => {
-    await getCSRF();
+    console.log(data);
+    const resData = await login(data);
 
-    const res = await fetch("http://localhost:8000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-XSRF-TOKEN": cookies.get("XSRF-TOKEN") as string,
-        Referer: "localhost:3000",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    });
+    if (resData.success) {
+      // Redirect to home page
+      console.log("Login success");
+      router.push("/");
+      return;
+    }
 
-    const resData = await res.json();
-
-    if (res.ok) {
-      console.log(resData);
-    } else {
-      console.log(resData);
+    if (resData.errors) {
+      for (const [key, value] of Object.entries(resData.errors)) {
+        setError(key, {
+          type: "manual",
+          message: value as string,
+        });
+      }
     }
   };
 
@@ -44,11 +42,15 @@ export default function LoginForm() {
       <div>
         <Label htmlFor="email">Email</Label>
         <Input type="email" {...register("email")} />
-        {errors.email && <p>{`${errors.email.message}`}</p>}
+        {errors.email && (
+          <p className="text-red-500">{`${errors.email.message}`}</p>
+        )}
         <div></div>
         <Label htmlFor="password">Password</Label>
         <Input type="password" {...register("password")} />
-        {errors.password && <p>{`${errors.password.message}`}</p>}
+        {errors.password && (
+          <p className="text-red-500">{`${errors.password.message}`}</p>
+        )}
       </div>
       <div className="mt-3">
         <Button type="submit">Login</Button>
