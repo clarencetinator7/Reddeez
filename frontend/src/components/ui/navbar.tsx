@@ -8,10 +8,10 @@ export default async function Navbar() {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="h-[80px] flex justify-center items-center">
-      <div className="w-full max-w-[1300px] px-5 flex justify-between items-center">
+    <div className="h-[60px] flex justify-center items-center sticky top-0 border-b bg-white z-10">
+      <div className="w-full max-w-[1500px] px-5 flex justify-between items-center">
         <div>
-          <h1 className="font-bold">ReddeezNuts</h1>
+          <h1 className="font-bold text-lg">ReddeezNuts</h1>
         </div>
         <nav>
           <ul className="flex space-x-5 items-center">

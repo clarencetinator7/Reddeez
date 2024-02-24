@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
+import Communities from "./_components/Communities";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        {children}
+        <div className="max-w-[1500px] mx-auto flex flex-row items-start">
+          <Communities />
+          <div className="flex-grow border-x">{children}</div>
+        </div>
       </body>
     </html>
   );

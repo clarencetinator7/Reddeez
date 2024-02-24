@@ -14,6 +14,25 @@ use Illuminate\Http\Request;
 class CommunityController extends Controller
 {
 
+    public function getAllCommunities()
+    {
+        $communities = Community::paginate(10);
+
+        return new CommunityCollection($communities);
+    }
+
+    // Get top 10 communities by members
+    public function getTopCommunities()
+    {
+        $communities = Community::withCount('members')->orderBy('members_count', 'desc')->take(10)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Top 10 communities found',
+            'data' => $communities
+        ], 200);
+    }
+
     public function createCommunity(StoreCommunityRequest $request)
     {
 

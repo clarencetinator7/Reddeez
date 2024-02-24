@@ -14,6 +14,10 @@ class CommunityCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'success' => true,
+            'message' => 'Communities retrieved successfully',
+            'data' => $this->collection,
+        ];
     }
 }
