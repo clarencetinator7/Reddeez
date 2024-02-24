@@ -33,6 +33,13 @@ class CommunityController extends Controller
         ], 200);
     }
 
+    public function getMyCommunities()
+    {
+        $user = User::findOrfail(auth()->id());
+        $communities = $user->community()->paginate(10);
+        return new CommunityCollection($communities);
+    }
+
     public function createCommunity(StoreCommunityRequest $request)
     {
 

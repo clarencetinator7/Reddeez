@@ -1,10 +1,3 @@
-type Community = {
-  id: number;
-  name: string;
-  description: string;
-  createdAt: string;
-};
-
 const getTopCommunities = async () => {
   const res = await fetch("http://localhost:8000/api/community/top", {
     method: "POST",
