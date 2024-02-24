@@ -3,8 +3,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/services/auth";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -17,21 +17,30 @@ export default function LoginForm() {
   } = useForm();
 
   const onSubmitHandler = async (data: FieldValues) => {
-    console.log(data);
-    const resData = await login(data);
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
 
-    if (resData.success) {
-      // Redirect to home page
-      console.log("Login success");
+    if (!res?.error) {
       router.push("/");
-      return;
-    }
+      router.refresh();
+    } else {
+      const apiErr = JSON.parse(res.error);
+      console.log(apiErr);
 
-    if (resData.errors) {
-      for (const [key, value] of Object.entries(resData.errors)) {
-        setError(key, {
+      if (apiErr.errors) {
+        for (const [key, value] of Object.entries(apiErr.errors)) {
+          setError(key, {
+            type: "manual",
+            message: value as string,
+          });
+        }
+      } else {
+        setError("email", {
           type: "manual",
-          message: value as string,
+          message: apiErr.message,
         });
       }
     }
@@ -39,6 +48,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
+      {}
       <div>
         <Label htmlFor="email">Email</Label>
         <Input type="email" {...register("email")} />

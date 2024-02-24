@@ -18,8 +18,10 @@ class AuthResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'displayName' => $this->display_name,
             'username' => $this->username,
             'email' => $this->email,
+            'avatar' => $this->avatar,
         ];
     }
 }

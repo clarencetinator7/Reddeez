@@ -1,17 +1,11 @@
-"use client";
-import { useCookies } from "next-client-cookies";
 import Link from "next/link";
-import { Button } from "./button";
-import { logout } from "@/services/auth";
+import { getServerSession } from "next-auth";
+import LogoutButton from "./LogoutButton";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
-export default function Navbar() {
-  const cookies = useCookies();
-
-  const isLoggedIn = cookies.get("token");
-
-  const onLogout = async () => {
-    await logout();
-  };
+export default async function Navbar() {
+  // const { data: session } = useSession();
+  const session = await getServerSession(authOptions);
 
   return (
     <div className="h-[80px] flex justify-center items-center">
@@ -24,11 +18,9 @@ export default function Navbar() {
             <li>
               <Link href="/">Home</Link>
             </li>
-            {isLoggedIn ? (
+            {session ? (
               <li>
-                <Button variant="ghost" onClick={onLogout}>
-                  Logout
-                </Button>
+                <LogoutButton />
               </li>
             ) : (
               <>
