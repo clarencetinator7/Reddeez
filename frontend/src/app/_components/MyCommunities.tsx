@@ -4,7 +4,7 @@ type MyCommunitiesProps = {
   session: Session | null;
 };
 
-async function getMyCommunities(session: Session) {
+export async function getMyCommunities(session: Session) {
   const res = await fetch("http://localhost:8000/api/community/myCommunities", {
     method: "POST",
     headers: {

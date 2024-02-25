@@ -51,10 +51,10 @@ class CommunityController extends Controller
         ], 200);
     }
 
-    public function getMyCommunities()
+    public function getMyCommunities(Request $request)
     {
         $user = User::findOrfail(auth()->id());
-        $communities = $user->community()->paginate(10);
+        $communities = $user->joinedCommunities()->paginate(10);
         return new CommunityCollection($communities);
     }
 
