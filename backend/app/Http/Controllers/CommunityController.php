@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCommunityRequest;
 use App\Models\Community;
 use App\Http\Requests\UpdateCommunityRequest;
 use App\Http\Resources\CommunityCollection;
+use App\Http\Resources\CommunityResource;
 use App\Http\Resources\PostCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
@@ -21,7 +22,24 @@ class CommunityController extends Controller
         return new CommunityCollection($communities);
     }
 
-    // Get top 10 communities by members
+    public function getCommunity(Request $request)
+    {
+        $community = Community::find($request->id);
+
+        if (!$community) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Community not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Community found',
+            'data' => new CommunityResource($community)
+        ], 200);
+    }
+
     public function getTopCommunities()
     {
         $communities = Community::withCount('members')->orderBy('members_count', 'desc')->take(10)->get();
