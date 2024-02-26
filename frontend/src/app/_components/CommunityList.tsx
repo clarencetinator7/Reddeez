@@ -18,7 +18,7 @@ export default function CommunityList({
   children,
 }: CommunityListProps) {
   return (
-    <Collapsible>
+    <Collapsible defaultOpen>
       <div className="flex items-center justify-between">
         <h4 className="text-sm text-gray-500 tracking-wide">{children}</h4>
         <CollapsibleTrigger asChild>

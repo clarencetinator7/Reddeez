@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
-import CommunityList from "./_components/CommunityPanel";
+import CommunityPanel from "./_components/CommunityPanel";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <div className="max-w-[1500px] w-full mx-auto flex-grow flex flex-row items-start">
-            <CommunityList />
+            <CommunityPanel />
             <div className="flex-1 border-x h-[calc(100vh-60px)]">
               {children}
             </div>

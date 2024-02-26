@@ -1,7 +1,7 @@
 "use server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export const joinCommunity = async (communityId: string) => {
   const session = await getServerSession(authOptions);
@@ -58,6 +58,33 @@ export const leaveCommunity = async (communityId: string) => {
   if (resData.success || res.ok) {
     revalidateTag("MyCommunities");
     return resData;
+  } else {
+    throw new Error(resData.message);
+  }
+};
+
+export const getUserCommunities = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const res = await fetch(
+    `http://localhost:8000/api/community/ownedCommunities`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${session.user.token}`,
+      },
+    }
+  );
+
+  const resData = await res.json();
+
+  if (res.ok) {
+    return resData.data;
   } else {
     throw new Error(resData.message);
   }

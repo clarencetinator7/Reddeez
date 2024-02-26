@@ -1,4 +1,4 @@
-import { getMyCommunities } from "@/app/_components/MyCommunities";
+import { getMyCommunities } from "@/app/_components/JoinedCommunities";
 import { Button } from "@/components/ui/button";
 import { Session } from "next-auth";
 import JoinCommunityButton from "./JoinButton";
