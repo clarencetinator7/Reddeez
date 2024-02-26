@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { joinCommunity } from "@/services/community";
-import { revalidatePath } from "next/cache";
+import { joinCommunity, leaveCommunity } from "@/services/community";
 import { useParams } from "next/navigation";
 
 type TJoinButtonProps = {
@@ -17,14 +16,14 @@ export default function JoinCommunityButton({
 
   const onClickHandler = async () => {
     if (isAlreadyMember) {
-      // Leave community
-      return;
+      const res = await leaveCommunity(params.id);
+
+      if (!res.success) {
+        console.error(res.message);
+      }
     } else {
       const res = await joinCommunity(params.id);
-
-      if (res.success) {
-        // revalidatePath(`/community/${params.id}`);
-      } else {
+      if (!res.success) {
         console.error(res.message);
       }
     }

@@ -33,3 +33,32 @@ export const joinCommunity = async (communityId: string) => {
     throw new Error(resData.message);
   }
 };
+
+export const leaveCommunity = async (communityId: string) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const res = await fetch(
+    `http://localhost:8000/api/community/${communityId}/leave`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${session.user.token}`,
+      },
+    }
+  );
+
+  const resData = await res.json();
+
+  if (resData.success || res.ok) {
+    revalidateTag("MyCommunities");
+    return resData;
+  } else {
+    throw new Error(resData.message);
+  }
+};
