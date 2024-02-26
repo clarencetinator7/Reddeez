@@ -28,15 +28,17 @@ export async function getMyCommunities(session: Session) {
 export default async function MyCommunities({ session }: MyCommunitiesProps) {
   const myCommunity: Community[] = await getMyCommunities(session!);
   return (
-    <div className="min-h-[70px] mb-5">
-      <h3 className="text-sm text-gray-500 tracking-wide">YOUR COMMUNITIES</h3>
+    <div className="min-h-[50px] mb-5">
+      {/* <h3 className="text-sm text-gray-500 tracking-wide">YOUR COMMUNITIES</h3> */}
 
       {myCommunity.length === 0 ? (
         <p className="text-xs text-gray-500">
           You are not a member of any community :&lt;
         </p>
       ) : (
-        <CommunityList communities={myCommunity} />
+        <CommunityList communities={myCommunity}>
+          JOINED COMMUNITIES
+        </CommunityList>
       )}
     </div>
   );

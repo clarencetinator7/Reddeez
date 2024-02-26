@@ -22,10 +22,10 @@ export default async function TopCommunities() {
   const topCommunities: Community[] = await getTopCommunities();
   return (
     <div>
-      <h3 className="text-sm text-gray-500 tracking-wide">TOP COMMUNITIES</h3>
-      <ul>
-        <CommunityList communities={topCommunities} />
-      </ul>
+      {/* <h3 className="text-sm text-gray-500 tracking-wide">TOP COMMUNITIES</h3> */}
+      <CommunityList communities={topCommunities}>
+        TOP COMMUNITIES
+      </CommunityList>
     </div>
   );
 }
