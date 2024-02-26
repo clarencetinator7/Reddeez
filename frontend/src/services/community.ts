@@ -126,3 +126,20 @@ export const createCommunity = async (data: FieldValues) => {
     return resData;
   }
 };
+
+export const getCommunityById = async (id: string) => {
+  const res = await fetch(`http://localhost:8000/api/community/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+  const resData = await res.json();
+
+  if (resData.success || res.ok) {
+    return resData.data;
+  } else {
+    throw new Error(resData.message);
+  }
+};
