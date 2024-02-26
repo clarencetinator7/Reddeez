@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import CommunityPageAction from "./_components/CommunityPageAction";
 
-async function getCommunityById(id: number) {
+async function getCommunityById(id: string) {
   const res = await fetch(`http://localhost:8000/api/community/${id}`, {
     method: "POST",
     headers: {
@@ -23,7 +23,7 @@ async function getCommunityById(id: number) {
 export default async function CommunityPage({
   params,
 }: {
-  params: { id: number };
+  params: { id: string };
 }) {
   const session = await getServerSession(authOptions);
   const community: Community = await getCommunityById(params.id);

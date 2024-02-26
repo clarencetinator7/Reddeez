@@ -5,7 +5,7 @@ import JoinCommunityButton from "./JoinButton";
 
 type CommunityPageActionProps = {
   session: Session | null;
-  id: number;
+  id: string;
 };
 
 export default async function CommunityPageAction({
@@ -16,10 +16,9 @@ export default async function CommunityPageAction({
 
   if (session) {
     const myCommunities: Community[] = await getMyCommunities(session);
-    // Check if user is a member of the community
-    // * FIXME: This always return false
-    // - The issue is that id is a string despite having a number type.
-    const isMember = myCommunities.some((community) => community.id === id);
+    const isMember = myCommunities.some(
+      (community) => parseInt(community.id) === parseInt(id)
+    );
     isAlreadyMember = isMember;
   }
 

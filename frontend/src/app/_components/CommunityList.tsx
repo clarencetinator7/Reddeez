@@ -1,17 +1,24 @@
-import { getServerSession } from "next-auth";
-import TopCommunities from "./TopCommunities";
-import MyCommunities from "./MyCommunities";
-import { authOptions } from "../api/auth/[...nextauth]/options";
+import Link from "next/link";
 
-export default async function CommunityList() {
-  const session = await getServerSession(authOptions);
+type CommunityListProps = {
+  communities: Community[];
+};
 
+export default function CommunityList({ communities }: CommunityListProps) {
   return (
-    <div className="w-full max-w-[250px] px-5 py-10 sticky top-[60px]">
-      {/* COMMUNITIES */}
-      <h3 className="font-bold mb-5">Communities</h3>
-      {session && <MyCommunities session={session} />}
-      <TopCommunities />
-    </div>
+    <ul>
+      {communities.map((community) => {
+        return (
+          <li
+            key={community.id}
+            className="p-2 rounded hover:bg-slate-200 transition-all duration-200 cursor-pointer"
+          >
+            <Link key={community.id} href={`/community/${community.id}`}>
+              n/{community.name}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

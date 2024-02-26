@@ -1,7 +1,7 @@
 "use server";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const joinCommunity = async (communityId: string) => {
   const session = await getServerSession(authOptions);
@@ -27,6 +27,7 @@ export const joinCommunity = async (communityId: string) => {
   console.log(resData);
 
   if (resData.success || res.ok) {
+    revalidateTag("MyCommunities");
     return resData;
   } else {
     throw new Error(resData.message);

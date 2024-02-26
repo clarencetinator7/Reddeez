@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CommunityList from "./CommunityList";
 
 const getTopCommunities = async () => {
   const res = await fetch("http://localhost:8000/api/community/top", {
@@ -23,15 +24,7 @@ export default async function TopCommunities() {
     <div>
       <h3 className="text-sm text-gray-500 tracking-wide">TOP COMMUNITIES</h3>
       <ul>
-        {topCommunities.map((community) => {
-          return (
-            <li key={community.id} className="p-2">
-              <Link href={`/community/${community.id}`}>
-                r/{community.name}
-              </Link>
-            </li>
-          );
-        })}
+        <CommunityList communities={topCommunities} />
       </ul>
     </div>
   );
