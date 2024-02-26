@@ -33,14 +33,18 @@ Route::post('/logout', AuthController::class . '@logout')->middleware('auth:sanc
 Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
     // Route::post('/{username}', UserController::class . '@getUserProfile');
     Route::post('/{id}', UserController::class . '@getUserWithId')->where('id', '[0-9]+');
-    Route::post('/{id}/communities', UserController::class . '@getUserCommunities')->where('id', '[0-9]+');
-
     // User Profiles
     Route::post('/updateDisplayName', UserController::class . '@updateDisplayName');
     Route::post('/updateAvatar', UserController::class . '@updateAvatar');
 });
 
 Route::group(['prefix' => 'community'], function () {
+    Route::post('/all', CommunityController::class . '@getAllCommunities');
+    Route::post('/top', CommunityController::class . '@getTopCommunities');
+    Route::post('/{id}', CommunityController::class . '@getCommunity')->where('id', '[0-9]+');
+    // TODO: rename to `joinedCommunities`
+    Route::post('/myCommunities', CommunityController::class . '@getMyCommunities')->middleware('auth:sanctum');
+    Route::post('/ownedCommunities', CommunityController::class . '@getOwnedCommunities')->middleware('auth:sanctum');
     Route::post('/create', CommunityController::class . '@createCommunity')->middleware('auth:sanctum');
     Route::post('/{id}/updateDescription', CommunityController::class . '@updateDescription')->where('id', '[0-9]+')->middleware('auth:sanctum');
 

@@ -19,6 +19,8 @@ class CommunityResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'createdAt' => $this->created_at,
+            'membersCount' => $this->whenCounted('members'),
+            'postsCount' => $this->whenCounted('post'),
         ];
     }
 }

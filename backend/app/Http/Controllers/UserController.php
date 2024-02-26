@@ -57,20 +57,6 @@ class UserController extends Controller
         }
     }
 
-    public function getUserCommunities(Request $request)
-    {
-        // $user = Auth::user();
-
-        $user = User::findOrFail($request->id)->joinedCommunities;
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User communities found',
-            // 'data' => new CommunityCollection($community)
-            'data' => $user
-        ], 200);
-    }
-
     public function updateDisplayName(Request $request)
     {
 
