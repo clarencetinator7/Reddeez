@@ -8,11 +8,8 @@ export default async function MyCommunities() {
   return (
     <div>
       <CreateCommunityButton />
-      <h4 className="text-sm text-gray-500 tracking-wide">YOUR COMMUNITIES</h4>
       {ownedCommunities.length > 0 && (
-        <CommunityList communities={ownedCommunities}>
-          OWNED COMMUNITIES
-        </CommunityList>
+        <CommunityList communities={ownedCommunities}>OWNED</CommunityList>
       )}
     </div>
   );

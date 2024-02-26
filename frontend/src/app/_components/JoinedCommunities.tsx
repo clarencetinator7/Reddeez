@@ -30,11 +30,11 @@ export default async function JoinedCommunities({
 }: MyCommunitiesProps) {
   const myCommunity: Community[] = await getMyCommunities(session!);
   return (
-    <div className="min-h-[50px] mb-5">
+    <div className="mb-5">
       {/* <h3 className="text-sm text-gray-500 tracking-wide">YOUR COMMUNITIES</h3> */}
 
       {myCommunity.length === 0 ? (
-        <p className="text-xs text-gray-500">
+        <p className="text-sm text-gray-500">
           You are not a member of any community :&lt;
         </p>
       ) : (

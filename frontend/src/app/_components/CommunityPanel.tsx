@@ -11,8 +11,18 @@ export default async function CommunityPanel() {
     <div className="w-full max-w-[250px] max-h-[calc(100vh-60px)] px-5 py-10 sticky top-[60px] overflow-y-auto">
       {/* COMMUNITIES */}
       <h3 className="font-bold mb-5">Communities</h3>
-      {session && <MyCommunities />}
-      {session && <JoinedCommunities session={session} />}
+      {session && (
+        <>
+          <MyCommunities />
+          <hr className="my-2" />
+        </>
+      )}
+      {session && (
+        <>
+          <JoinedCommunities session={session} />
+          <hr className="my-2" />
+        </>
+      )}
       <TopCommunities />
     </div>
   );

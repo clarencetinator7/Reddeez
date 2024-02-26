@@ -28,20 +28,20 @@ export default function CommunityList({
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent>
-        <ul>
+        <div className="flex flex-col">
           {communities.map((community) => {
             return (
-              <li
+              <Link
                 key={community.id}
                 className="p-2 rounded hover:bg-slate-200 transition-all duration-200 cursor-pointer"
+                href={`/community/${community.id}`}
+                prefetch={false}
               >
-                <Link key={community.id} href={`/community/${community.id}`}>
-                  n/{community.name}
-                </Link>
-              </li>
+                n/{community.name}
+              </Link>
             );
           })}
-        </ul>
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );

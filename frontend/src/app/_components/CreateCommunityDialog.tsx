@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -8,8 +9,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createCommunity } from "@/services/community";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 export default function CreateCommunityDialog() {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<FieldValues>();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const resData = await createCommunity(data);
+
+    if (resData.success) {
+      // Show a message / close dialog
+      return;
+    }
+
+    if (resData.errors) {
+      for (const key in resData.errors) {
+        setError(key, {
+          type: "server",
+          message: resData.errors[key][0],
+        });
+      }
+    }
+  };
+
   return (
     <DialogContent className="sm:max-w-[500px]">
       <DialogHeader>
@@ -20,25 +48,20 @@ export default function CreateCommunityDialog() {
         </DialogDescription>
       </DialogHeader>
       <div>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-2">
-            <Label htmlFor="communityName">Community Name</Label>
-            <Input
-              type="text"
-              id="communityName"
-              name="communityName"
-              placeholder="Community Name"
-              required
-            />
+            <Label htmlFor="name">Community Name</Label>
+            <Input type="text" {...register("name")} />
+            {errors.name && (
+              <span className="text-red-500 text-sm">{`${errors.name.message}`}</span>
+            )}
           </div>
           <div className="">
-            <Label htmlFor="communityDescription">Description</Label>
-            <Textarea
-              id="communityDescription"
-              name="communityDescription"
-              placeholder="Description"
-              required
-            />
+            <Label htmlFor="description">Description</Label>
+            <Textarea id="description" {...register("description")} />
+            {errors.description && (
+              <span className="text-red-500 text-sm">{`${errors.description.message}`}</span>
+            )}
           </div>
           <div className="flex justify-end items-center gap-2">
             <Button type="button" variant="secondary" className="mt-5">

@@ -2,6 +2,7 @@ import { getMyCommunities } from "@/app/_components/JoinedCommunities";
 import { Button } from "@/components/ui/button";
 import { Session } from "next-auth";
 import JoinCommunityButton from "./JoinButton";
+import { getUserCommunities } from "@/services/community";
 
 type CommunityPageActionProps = {
   session: Session | null;
@@ -13,13 +14,18 @@ export default async function CommunityPageAction({
   id,
 }: CommunityPageActionProps) {
   let isAlreadyMember = false;
+  let isOwner = false;
 
   if (session) {
     const myCommunities: Community[] = await getMyCommunities(session);
-    const isMember = myCommunities.some(
+    isAlreadyMember = myCommunities.some(
       (community) => parseInt(community.id) === parseInt(id)
     );
-    isAlreadyMember = isMember;
+
+    const ownedCommunities: Community[] = await getUserCommunities();
+    isOwner = ownedCommunities.some(
+      (community) => parseInt(community.id) === parseInt(id)
+    );
   }
 
   return (
@@ -27,10 +33,12 @@ export default async function CommunityPageAction({
       <Button variant={"outline"} disabled={!session}>
         Create Post
       </Button>
-      <JoinCommunityButton
-        disabled={!session}
-        isAlreadyMember={isAlreadyMember}
-      />
+      {!isOwner && (
+        <JoinCommunityButton
+          disabled={!session}
+          isAlreadyMember={isAlreadyMember}
+        />
+      )}
     </div>
   );
 }

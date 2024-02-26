@@ -2,6 +2,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import { revalidateTag } from "next/cache";
+import { FieldValues } from "react-hook-form";
 
 export const joinCommunity = async (communityId: string) => {
   const session = await getServerSession(authOptions);
@@ -78,6 +79,7 @@ export const getUserCommunities = async () => {
         Accept: "application/json",
         Authorization: `Bearer ${session.user.token}`,
       },
+      next: { tags: ["OwnedCommunities"] },
     }
   );
 
@@ -87,5 +89,40 @@ export const getUserCommunities = async () => {
     return resData.data;
   } else {
     throw new Error(resData.message);
+  }
+};
+
+export const createCommunity = async (data: FieldValues) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const res = await fetch("http://localhost:8000/api/community/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${session.user.token}`,
+    },
+    body: JSON.stringify({
+      name: data.name,
+      description: data.description ? data.description : null,
+    }),
+  });
+
+  const resData = await res.json();
+
+  if (!res.ok) {
+    console.log(resData);
+    return {
+      success: false,
+      message: resData.message,
+      errors: resData.errors,
+    };
+  } else {
+    revalidateTag("OwnedCommunities");
+    return resData;
   }
 };
