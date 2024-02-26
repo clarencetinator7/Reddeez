@@ -11,6 +11,7 @@ use App\Http\Resources\PostCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommunityController extends Controller
 {
@@ -56,6 +57,19 @@ class CommunityController extends Controller
         $user = User::findOrfail(auth()->id());
         $communities = $user->joinedCommunities()->paginate(10);
         return new CommunityCollection($communities);
+    }
+
+    public function getOwnedCommunities(Request $request)
+    {
+        $user = Auth::user();
+
+        $communities = $user->community;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User communities found',
+            'data' => $communities
+        ], 200);
     }
 
     public function createCommunity(StoreCommunityRequest $request)
