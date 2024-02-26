@@ -3,4 +3,6 @@ type Community = {
   name: string;
   description: string;
   createdAt: string;
+  membersCount?: number;
+  postsCount?: number;
 };

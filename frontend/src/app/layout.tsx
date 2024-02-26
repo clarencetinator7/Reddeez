@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col">
           <Navbar />
           <div className="max-w-[1500px] w-full mx-auto flex-grow flex flex-row items-start">
             <CommunityPanel />
-            <div className="flex-1 border-x h-[calc(100vh-60px)]">
+            <div className="flex-1 border-x min-h-[calc(100vh-60px)]">
               {children}
             </div>
           </div>

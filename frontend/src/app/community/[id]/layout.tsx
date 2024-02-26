@@ -1,4 +1,5 @@
 import CommunityHeader from "./_components/CommunityHeader";
+import CommunityInfo from "./_components/CommunityInfo";
 
 export default function CommunityPageLayout({
   children,
@@ -8,11 +9,11 @@ export default function CommunityPageLayout({
   params: { id: string };
 }) {
   return (
-    <main className="flex flex-col p-10 h-full">
+    <main className="flex flex-col gap-5 p-10 h-full">
       <CommunityHeader id={params.id} />
       <div className="flex-grow flex items-start">
         {children}
-        <div>Community Info</div>
+        <CommunityInfo id={params.id} />
       </div>
     </main>
   );

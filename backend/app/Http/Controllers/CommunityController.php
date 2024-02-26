@@ -25,7 +25,7 @@ class CommunityController extends Controller
 
     public function getCommunity(Request $request)
     {
-        $community = Community::find($request->id);
+        $community = Community::find($request->id)->loadCount('members')->loadCount('post');
 
         if (!$community) {
             return response()->json([
@@ -38,6 +38,7 @@ class CommunityController extends Controller
             'success' => true,
             'message' => 'Community found',
             'data' => new CommunityResource($community)
+            // 'data' => $community
         ], 200);
     }
 
