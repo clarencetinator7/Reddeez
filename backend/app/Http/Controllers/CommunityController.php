@@ -80,7 +80,7 @@ class CommunityController extends Controller
         $community = $user->community()->create($request->all());
 
         return response()->json([
-            'status' => 'success',
+            'success' => true,
             'message' => 'Community created',
             'data' => $community
         ], 201);

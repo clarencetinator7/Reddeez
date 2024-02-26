@@ -33,11 +33,10 @@ export default function CommunityList({
             return (
               <Link
                 key={community.id}
-                className="p-2 rounded hover:bg-slate-200 transition-all duration-200 cursor-pointer"
+                className="p-2 rounded hover:bg-slate-200 transition-all duration-200 cursor-pointer truncate"
                 href={`/community/${community.id}`}
-                prefetch={false}
               >
-                n/{community.name}
+                r/{community.name}
               </Link>
             );
           })}

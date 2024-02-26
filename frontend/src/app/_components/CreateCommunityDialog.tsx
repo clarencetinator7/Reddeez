@@ -10,21 +10,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createCommunity } from "@/services/community";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useState } from "react";
+import { FieldValues, SubmitHandler, set, useForm } from "react-hook-form";
 
-export default function CreateCommunityDialog() {
+type CreateCommunityDialogProps = {
+  onCloseHandler: () => void;
+};
+
+export default function CreateCommunityDialog({
+  onCloseHandler,
+}: CreateCommunityDialogProps) {
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = useForm<FieldValues>();
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const resData = await createCommunity(data);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setIsLoading(true);
+    const resData = await createCommunity(data);
+    console.log(resData);
+    setIsLoading(false);
     if (resData.success) {
-      // Show a message / close dialog
+      reset();
+      onCloseHandler();
       return;
     }
 
@@ -64,10 +77,16 @@ export default function CreateCommunityDialog() {
             )}
           </div>
           <div className="flex justify-end items-center gap-2">
-            <Button type="button" variant="secondary" className="mt-5">
+            <Button
+              type="button"
+              variant="secondary"
+              className="mt-5"
+              onClick={onCloseHandler}
+              disabled={isLoading}
+            >
               Cancel
             </Button>
-            <Button type="submit" className="mt-5">
+            <Button type="submit" className="mt-5" disabled={isLoading}>
               Create
             </Button>
           </div>
