@@ -5,5 +5,6 @@ type Post = {
   communityId: string;
   upvotes: number;
   downvotes: number;
-  postedBy: User; // User type here
+  votes: Vote[];
+  postedBy: User;
 };
