@@ -1,4 +1,5 @@
 "use client";
+import { vote } from "@/services/vote";
 import { LucideArrowBigDown, LucideArrowBigUp } from "lucide-react";
 
 type VotePostProps = {
@@ -7,13 +8,20 @@ type VotePostProps = {
 };
 
 export default function VotePostButton({ post, userId }: VotePostProps) {
-  let vote: Vote | undefined;
+  let voteData: Vote | undefined;
   let voteStatus: "U" | "D" | undefined;
+
   if (userId && post.votes.some((vote) => vote.userId === userId)) {
-    vote = post.votes.find((vote) => vote.userId === userId);
-    voteStatus = vote?.status;
-    console.log(vote);
+    voteData = post.votes.find((vote) => vote.userId === userId);
+    voteStatus = voteData?.status;
   }
+
+  const onVoteHandler = async (voteStatus: string) => {
+    if (!userId) return;
+
+    const res = await vote(post.id, voteStatus, "post");
+    console.log(res);
+  };
 
   return (
     <div className="p-1 flex items-center gap-1 bg-slate-100 rounded-lg">
@@ -22,12 +30,13 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
           voteStatus === "U" ? "text-amber-500" : "hover:text-amber-500"
         }`}
         disabled={!userId}
+        onClick={() => onVoteHandler("u")}
       >
         <LucideArrowBigUp className="w-6 h-6" />
       </button>
       <span
         className={`text-sm font-semibold  ${
-          vote ? "text-amber-500" : "text-gray-500"
+          voteData ? "text-amber-500" : "text-gray-500"
         }`}
       >
         {post.upvotes - post.downvotes}
@@ -36,6 +45,7 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
         className={`text-gray-500 ${
           voteStatus === "D" ? "text-amber-500" : "hover:text-amber-500"
         } hover:text-amber-500`}
+        onClick={() => onVoteHandler("d")}
         disabled={!userId}
       >
         <LucideArrowBigDown className="w-6 h-6" />

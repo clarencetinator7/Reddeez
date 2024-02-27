@@ -151,6 +151,7 @@ export const getCommunityPosts = async (id: string) => {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
+    next: { tags: ["CommunityPosts"] },
   });
 
   const resData = await res.json();
