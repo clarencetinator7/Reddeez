@@ -1,10 +1,8 @@
-import {
-  LucideArrowBigDown,
-  LucideArrowBigUp,
-  LucideMenuSquare,
-  LucideMessageSquare,
-} from "lucide-react";
+import { LucideMessageSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import VotePostButton from "./VotePostButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
 type PostItemProps = {
   post: Post;
@@ -30,20 +28,11 @@ export default function PostItem({ post }: PostItemProps) {
   );
 }
 
-function PostAction({ post }: PostItemProps) {
+async function PostAction({ post }: PostItemProps) {
+  const session = await getServerSession(authOptions);
   return (
     <div className="flex items-center gap-2 mt-2">
-      <div className="p-1 flex items-center gap-1 bg-slate-100 rounded-lg">
-        <button className=" text-gray-500 hover:text-amber-500">
-          <LucideArrowBigUp className="w-6 h-6" />
-        </button>
-        <span className="text-sm font-semibold text-gray-500">
-          {post.upvotes - post.downvotes}
-        </span>
-        <button className="text-gray-500 hover:text-amber-500">
-          <LucideArrowBigDown className="w-6 h-6" />
-        </button>
-      </div>
+      <VotePostButton post={post} userId={session?.user.id || null} />
       <div className="p-1.5 bg-slate-100 rounded-lg">
         <button className="text-sm text-gray-500 flex items-center gap-1 group-[comment] hover:text-amber-500">
           <LucideMessageSquare className="w-5 h-5" />
