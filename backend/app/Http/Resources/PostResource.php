@@ -25,6 +25,7 @@ class PostResource extends JsonResource
             'postedBy' => new UserResource($this->whenLoaded('user')),
             'community' => new CommunityResource($this->whenLoaded('community')),
             'comments' => CommentResource::collection($this->whenLoaded('comment')),
+            'createdAt' => $this->created_at,
         ];
     }
 }

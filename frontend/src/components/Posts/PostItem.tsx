@@ -1,3 +1,4 @@
+import moment from "moment";
 import { LucideMessageSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import VotePostButton from "./VotePostButton";
@@ -19,6 +20,12 @@ export default function PostItem({ post }: PostItemProps) {
         <span className="text-sm">
           n/
           <span>{post.postedBy.username}</span>
+        </span>
+        <span className="text-sm text-gray-500 space-x-1">
+          <span className="text-gray-500">•</span>
+          <span className="text-gray-500">
+            {moment(post.createdAt).fromNow()}
+          </span>
         </span>
       </div>
       <h1 className="font-semibold mb-2">{post.title}</h1>

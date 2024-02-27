@@ -7,4 +7,5 @@ type Post = {
   downvotes: number;
   votes: Vote[];
   postedBy: User;
+  createdAt: string;
 };

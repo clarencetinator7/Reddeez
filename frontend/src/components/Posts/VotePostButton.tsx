@@ -9,46 +9,46 @@ type VotePostProps = {
 };
 
 function updatePostReducer(
-  currPost: Post,
+  state: Post,
   { voteStatus, userId }: { voteStatus: "U" | "D"; userId: string }
 ) {
   // Check if the user have voted
-  const userVote = currPost.votes.find((vote) => vote.userId === userId);
+  const userVote = state.votes.find((vote) => vote.userId === userId);
 
   if (userVote) {
     // Check if voteStatus is the same as the user vote status
     if (userVote.status === voteStatus) {
       // If it is, remove the vote
-      currPost.votes = currPost.votes.filter((vote) => vote.userId !== userId);
+      state.votes = state.votes.filter((vote) => vote.userId !== userId);
       if (voteStatus === "U") {
-        currPost.upvotes -= 1;
+        state.upvotes -= 1;
       } else {
-        currPost.downvotes -= 1;
+        state.downvotes -= 1;
       }
     } else {
       // If it isn't, update the vote
       userVote.status = voteStatus;
       if (voteStatus === "U") {
-        currPost.upvotes += 1;
-        currPost.downvotes -= 1;
+        state.upvotes += 1;
+        state.downvotes -= 1;
       } else {
-        currPost.downvotes += 1;
-        currPost.upvotes -= 1;
+        state.downvotes += 1;
+        state.upvotes -= 1;
       }
     }
   }
 
   // If the user haven't voted, add the vote
   else {
-    currPost.votes.push({ userId, status: voteStatus } as Vote);
+    state.votes.push({ userId, status: voteStatus } as Vote);
     if (voteStatus === "U") {
-      currPost.upvotes += 1;
+      state.upvotes += 1;
     } else {
-      currPost.downvotes += 1;
+      state.downvotes += 1;
     }
   }
 
-  return currPost;
+  return state;
 }
 
 export default function VotePostButton({ post, userId }: VotePostProps) {
