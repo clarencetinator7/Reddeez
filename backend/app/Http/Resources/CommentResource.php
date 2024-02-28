@@ -22,6 +22,7 @@ class CommentResource extends JsonResource
             'replies' => CommentResource::collection($this->whenLoaded('replies')),
             'upvotes' => $this->upvotes,
             'downvotes' => $this->downvotes,
+            'votes' => VoteResource::collection($this->whenLoaded('votes')),
         ];
     }
 }

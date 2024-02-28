@@ -1,5 +1,8 @@
 import moment from "moment";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import VotePostButton from "@/components/Posts/VotePostButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
 type CommentSectionProps = {
   replies: Reply[];
@@ -20,7 +23,9 @@ export default function CommentSection({ replies }: CommentSectionProps) {
   );
 }
 
-function Comment({ reply, depth }: CommentProps) {
+async function Comment({ reply, depth }: CommentProps) {
+  const session = await getServerSession(authOptions);
+
   return (
     <div
       style={{
@@ -48,10 +53,20 @@ function Comment({ reply, depth }: CommentProps) {
               <span>{moment(reply.commentedAt).fromNow()}</span>
             </span>
           </div>
-          <div className="mt-1">
-            <p>{reply.comment}</p>
+          <div className="mt-1 flex flex-col items-start gap-2">
+            <div>
+              <p>{reply.comment}</p>
+            </div>
+            <div>
+              <VotePostButton
+                userId={session?.user.id || null}
+                voteable={reply}
+                voteableType="comment"
+              />
+            </div>
           </div>
         </div>
+        {/* COMMENT ACTION */}
       </div>
       {reply.replies?.map((rep) => (
         <Comment key={rep.id} reply={rep} depth={depth + 25} />

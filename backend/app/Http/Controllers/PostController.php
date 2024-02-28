@@ -72,7 +72,7 @@ class PostController extends Controller
         if ($includeComments) {
             // Include comments and replies recursively
             $post->load(['comment' => function ($query) {
-                $query->with('user')->with('replies')->withCount(['votes as upvotes' => function ($query) {
+                $query->with('user')->with('votes')->with('replies')->withCount(['votes as upvotes' => function ($query) {
                     $query->where('status', 'U');
                 }, 'votes as downvotes' => function ($query) {
                     $query->where('status', 'D');

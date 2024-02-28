@@ -4,12 +4,13 @@ import { LucideArrowBigDown, LucideArrowBigUp } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 
 type VotePostProps = {
-  post: Post;
+  voteable: Post | Reply;
   userId: string | null;
+  voteableType: "post" | "comment";
 };
 
 function updatePostReducer(
-  state: Post,
+  state: Post | Reply,
   { voteStatus, userId }: { voteStatus: "U" | "D"; userId: string }
 ) {
   // Check if the user have voted
@@ -51,12 +52,16 @@ function updatePostReducer(
   return state;
 }
 
-export default function VotePostButton({ post, userId }: VotePostProps) {
+export default function VotePostButton({
+  voteable,
+  userId,
+  voteableType,
+}: VotePostProps) {
   let voteData: Vote | undefined;
   let voteStatus: "U" | "D" | undefined;
 
   const [optimisticPost, setOptimisticPost] = useOptimistic(
-    post,
+    voteable,
     updatePostReducer
   );
   const [, startTransition] = useTransition();
@@ -71,7 +76,7 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
     if (!userId) return;
     setIsLoading(true);
     setOptimisticPost({ voteStatus, userId });
-    await vote(post.id, voteStatus.toLowerCase(), "post");
+    await vote(voteable.id, voteStatus.toLowerCase(), voteableType);
     setIsLoading(false);
   };
 
@@ -100,7 +105,7 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
           voteData ? "text-amber-500" : "text-gray-500"
         }`}
       >
-        {post.upvotes - post.downvotes}
+        {voteable.upvotes - voteable.downvotes}
       </span>
       <button
         className={` ${

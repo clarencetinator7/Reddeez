@@ -42,7 +42,7 @@ export default async function PostComments({
           <p className="mt-2">{post.body}</p>
         </div>
         <div className="flex items-center gap-2">
-          <VotePostButton post={post} userId={session?.user?.id || null} />
+          <VotePostButton voteable={post} userId={session?.user?.id || null} />
           <div className="p-1.5 bg-slate-100 rounded-lg">
             <button className="flex gap-2 text-gray-500 hover:text-amber-500">
               <LucideMessageSquare className="w-5 h-5" />
