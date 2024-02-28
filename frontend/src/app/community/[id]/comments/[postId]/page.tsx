@@ -1,6 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import moment from "moment";
 import getPost from "@/services/post";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import VotePostButton from "@/components/Posts/VotePostButton";
 
 export default async function PostComments({
   params,
@@ -8,6 +11,7 @@ export default async function PostComments({
   params: { postId: string };
 }) {
   const post: Post = await getPost(params.postId);
+  const session = await getServerSession(authOptions);
 
   return (
     <div className="flex-1">
@@ -33,6 +37,9 @@ export default async function PostComments({
         <div>
           <h2 className="text-2xl font-bold">{post.title}</h2>
           <p className="mt-2">{post.body}</p>
+        </div>
+        <div>
+          <VotePostButton post={post} userId={session?.user?.id || null} />
         </div>
       </div>
     </div>
