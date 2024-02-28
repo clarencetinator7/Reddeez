@@ -89,7 +89,8 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
         }`}
         disabled={!userId || isLoading}
         onClick={(e) => {
-          e.stopPropagation(), startTransition(() => onVoteHandler("U"));
+          e.preventDefault();
+          startTransition(() => onVoteHandler("U"));
         }}
       >
         <LucideArrowBigUp className="w-6 h-6" />
@@ -108,7 +109,8 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
             : "text-gray-500 hover:text-amber-500"
         }`}
         onClick={(e) => {
-          e.stopPropagation(), startTransition(() => onVoteHandler("D"));
+          e.preventDefault();
+          startTransition(() => onVoteHandler("D"));
         }}
         disabled={!userId || isLoading}
       >
