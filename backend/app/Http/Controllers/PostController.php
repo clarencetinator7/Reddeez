@@ -63,7 +63,7 @@ class PostController extends Controller
 
         $includeComments = request()->query('includeComments', false);
 
-        $post = Post::with('user')->find($request->id)->loadCount(['votes as upvotes' => function ($query) {
+        $post = Post::with('user')->find($request->id)->load('community')->loadCount(['votes as upvotes' => function ($query) {
             $query->where('status', 'U');
         }, 'votes as downvotes' => function ($query) {
             $query->where('status', 'D');

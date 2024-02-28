@@ -21,6 +21,7 @@ class PostResource extends JsonResource
             'communityId' => $this->community_id,
             'upvotes' => $this->upvotes,
             'downvotes' => $this->downvotes,
+            'commentCount' => $this->whenCounted('comment'),
             'votes' => new VoteCollection($this->whenLoaded('votes')),
             'postedBy' => new UserResource($this->whenLoaded('user')),
             'community' => new CommunityResource($this->whenLoaded('community')),

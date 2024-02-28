@@ -1,10 +1,7 @@
 import moment from "moment";
-import { LucideMessageSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import VotePostButton from "./VotePostButton";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import PostItemContainer from "./PostItemContainer";
+import PostAction from "./PostAction";
 
 type PostItemProps = {
   post: Post;
@@ -35,20 +32,5 @@ export default function PostItem({ post }: PostItemProps) {
         <PostAction post={post} />
       </div>
     </PostItemContainer>
-  );
-}
-
-async function PostAction({ post }: PostItemProps) {
-  const session = await getServerSession(authOptions);
-  return (
-    <div className="flex items-center gap-2 mt-2">
-      <VotePostButton post={post} userId={session?.user.id || null} />
-      <div className="p-1.5 bg-slate-100 rounded-lg">
-        <button className="text-sm text-gray-500 flex items-center gap-1 group-[comment] hover:text-amber-500">
-          <LucideMessageSquare className="w-5 h-5" />
-          <span className="text-sm font-semibold">10</span>
-        </button>
-      </div>
-    </div>
   );
 }
