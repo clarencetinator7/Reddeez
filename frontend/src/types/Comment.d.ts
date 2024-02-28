@@ -1,4 +1,4 @@
-type Comment = {
+type Reply = {
   id: string;
   comment: string;
   commentedAt: string;
@@ -6,5 +6,5 @@ type Comment = {
   upvotes: number;
   downvotes: number;
   votes: Vote[];
-  replies: Comment[];
+  replies: Reply[];
 };

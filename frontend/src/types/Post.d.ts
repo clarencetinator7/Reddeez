@@ -8,7 +8,7 @@ type Post = {
   votes: Vote[];
   postedBy: User;
   community: Community;
-  comments?: Comment[];
+  comments?: Reply[];
   commentCount?: number;
   createdAt: string;
 };
