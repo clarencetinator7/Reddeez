@@ -1,7 +1,7 @@
 "use client";
 import { vote } from "@/services/vote";
 import { LucideArrowBigDown, LucideArrowBigUp } from "lucide-react";
-import { useOptimistic, useTransition } from "react";
+import { useOptimistic, useState, useTransition } from "react";
 
 type VotePostProps = {
   post: Post;
@@ -60,6 +60,7 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
     updatePostReducer
   );
   const [, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   if (userId && optimisticPost.votes.some((vote) => vote.userId === userId)) {
     voteData = optimisticPost.votes.find((vote) => vote.userId === userId);
@@ -68,9 +69,10 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
 
   const onVoteHandler = async (voteStatus: "U" | "D") => {
     if (!userId) return;
-
+    setIsLoading(true);
     setOptimisticPost({ voteStatus, userId });
     await vote(post.id, voteStatus.toLowerCase(), "post");
+    setIsLoading(false);
   };
 
   return (
@@ -80,11 +82,15 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
       }`}
     >
       <button
-        className={`text-gray-500  ${
-          voteStatus === "U" ? "text-amber-500" : "hover:text-amber-500"
+        className={`  ${
+          voteStatus === "U"
+            ? "text-amber-500"
+            : "text-gray-500 hover:text-amber-500"
         }`}
-        disabled={!userId}
-        onClick={() => startTransition(() => onVoteHandler("U"))}
+        disabled={!userId || isLoading}
+        onClick={(e) => {
+          e.stopPropagation(), startTransition(() => onVoteHandler("U"));
+        }}
       >
         <LucideArrowBigUp className="w-6 h-6" />
       </button>
@@ -96,11 +102,15 @@ export default function VotePostButton({ post, userId }: VotePostProps) {
         {post.upvotes - post.downvotes}
       </span>
       <button
-        className={`text-gray-500 ${
-          voteStatus === "D" ? "text-amber-500" : "hover:text-amber-500"
-        } hover:text-amber-500`}
-        onClick={() => startTransition(() => onVoteHandler("D"))}
-        disabled={!userId}
+        className={` ${
+          voteStatus === "D"
+            ? "text-amber-500"
+            : "text-gray-500 hover:text-amber-500"
+        }`}
+        onClick={(e) => {
+          e.stopPropagation(), startTransition(() => onVoteHandler("D"));
+        }}
+        disabled={!userId || isLoading}
       >
         <LucideArrowBigDown className="w-6 h-6" />
       </button>
