@@ -162,3 +162,24 @@ export const getCommunityPosts = async (id: string) => {
     return resData.data;
   }
 };
+
+export const searchCommunity = async (query: string) => {
+  const res = await fetch(
+    `http://localhost:8000/api/community/search?q=${query}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+  );
+
+  const resData = await res.json();
+
+  if (!res.ok) {
+    throw new Error(resData.message);
+  } else {
+    return resData.data;
+  }
+};
