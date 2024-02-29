@@ -1,26 +1,27 @@
 "use client";
+import VotePostButton from "@/components/Posts/VotePostButton";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { postComment } from "@/services/comment";
+import { replyToComment } from "@/services/comment";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
-type AddCommentButtonProps = {
-  postId: string;
+type CommentActionProps = {
+  reply: Reply;
+  userId: string | null;
 };
 
-export default function AddCommentButton({ postId }: AddCommentButtonProps) {
-  const [isCommenting, setIsCommenting] = useState(false);
-
+export default function CommentAction({ reply, userId }: CommentActionProps) {
   const {
     register,
-    handleSubmit,
     reset,
+    handleSubmit,
     formState: { errors },
   } = useForm();
+  const [isCommenting, setIsCommenting] = useState(false);
 
   const onCommentHandler: SubmitHandler<FieldValues> = async (data) => {
-    const res = await postComment({ postId, body: data.body });
+    const res = await replyToComment({ commentId: reply.id, body: data.body });
 
     if (res.success) {
       reset();
@@ -29,15 +30,22 @@ export default function AddCommentButton({ postId }: AddCommentButtonProps) {
   };
 
   return (
-    <div
-      className={`${
-        isCommenting ? "" : "px-3 py-2 border"
-      } my-5 rounded-lg text-gray-500 text-sm cursor-text hover:border-amber-500`}
-      onClick={() => setIsCommenting(true)}
-    >
-      {/* Add Comment */}
-      {isCommenting ? (
-        <form onSubmit={handleSubmit(onCommentHandler)}>
+    <>
+      <div className="flex gap-2">
+        <VotePostButton
+          userId={userId}
+          voteable={reply}
+          voteableType="comment"
+        />
+        <button
+          className="px-2 py-0 font-semibold text-sm text-gray-500 bg-slate-100 rounded-lg"
+          onClick={() => setIsCommenting(true)}
+        >
+          Reply
+        </button>
+      </div>
+      {isCommenting && (
+        <form onSubmit={handleSubmit(onCommentHandler)} className="w-full">
           {errors.body && <p className="text-red-500">Comment is required</p>}
           <Textarea
             className="outline-none w-full px-3 py-2 resize-none active:border-none active:outline-none"
@@ -58,9 +66,7 @@ export default function AddCommentButton({ postId }: AddCommentButtonProps) {
             <Button type="submit">Comment</Button>
           </div>
         </form>
-      ) : (
-        <p>Add Comment</p>
       )}
-    </div>
+    </>
   );
 }

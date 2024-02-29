@@ -3,6 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import VotePostButton from "@/components/Posts/VotePostButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import CommentAction from "./CommentAction";
 
 type CommentSectionProps = {
   replies: Reply[];
@@ -53,17 +54,11 @@ async function Comment({ reply, depth }: CommentProps) {
               <span>{moment(reply.commentedAt).fromNow()}</span>
             </span>
           </div>
-          <div className="mt-1 flex flex-col items-start gap-2">
+          <div className="mt-1 w-full flex flex-col items-start gap-2 pr-2 ">
             <div>
               <p>{reply.comment}</p>
-            </div>
-            <div>
-              <VotePostButton
-                userId={session?.user.id || null}
-                voteable={reply}
-                voteableType="comment"
-              />
-            </div>
+            </div> 
+            <CommentAction reply={reply} userId={session?.user?.id || null} />
           </div>
         </div>
         {/* COMMENT ACTION */}
