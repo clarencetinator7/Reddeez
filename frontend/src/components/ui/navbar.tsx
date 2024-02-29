@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import LogoutButton from "./LogoutButton";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import CommunitySearchBar from "@/app/_components/CommunitySearchBar";
 
 export default async function Navbar() {
   // const { data: session } = useSession();
@@ -13,6 +14,7 @@ export default async function Navbar() {
         <div>
           <h1 className="font-bold text-lg">Reddeez</h1>
         </div>
+        <CommunitySearchBar />
         <nav>
           <ul className="flex space-x-5 items-center">
             <li>
