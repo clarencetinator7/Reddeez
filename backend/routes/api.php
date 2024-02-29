@@ -43,6 +43,7 @@ Route::group(['prefix' => 'community'], function () {
     Route::post('/top', CommunityController::class . '@getTopCommunities');
     Route::post('/{id}', CommunityController::class . '@getCommunity')->where('id', '[0-9]+');
     // TODO: rename to `joinedCommunities`
+    Route::post('/search', CommunityController::class . '@searchCommunity');
     Route::post('/myCommunities', CommunityController::class . '@getMyCommunities')->middleware('auth:sanctum');
     Route::post('/ownedCommunities', CommunityController::class . '@getOwnedCommunities')->middleware('auth:sanctum');
     Route::post('/create', CommunityController::class . '@createCommunity')->middleware('auth:sanctum');
