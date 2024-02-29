@@ -9,6 +9,7 @@ export default async function getPost(postId: string) {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      next: { tags: ["Post"] },
     }
   );
 
