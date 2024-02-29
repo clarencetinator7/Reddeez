@@ -11,7 +11,7 @@ export default async function Navbar() {
     <div className="h-[60px] flex justify-center items-center sticky top-0 border-b bg-white z-10">
       <div className="w-full max-w-[1500px] px-5 flex justify-between items-center">
         <div>
-          <h1 className="font-bold text-lg">ReddeezNuts</h1>
+          <h1 className="font-bold text-lg">Reddeez</h1>
         </div>
         <nav>
           <ul className="flex space-x-5 items-center">

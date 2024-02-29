@@ -11,7 +11,7 @@ export default function CommunityPageLayout({
   return (
     <main className="flex flex-col gap-5 p-10 h-full">
       <CommunityHeader id={params.id} />
-      <div className="flex-grow flex items-start">
+      <div className="flex-grow flex items-start gap-x-5">
         {children}
         <CommunityInfo id={params.id} />
       </div>

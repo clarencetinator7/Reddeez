@@ -143,3 +143,22 @@ export const getCommunityById = async (id: string) => {
     throw new Error(resData.message);
   }
 };
+
+export const getCommunityPosts = async (id: string) => {
+  const res = await fetch(`http://localhost:8000/api/community/${id}/posts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    next: { tags: ["CommunityPosts"] },
+  });
+
+  const resData = await res.json();
+
+  if (!res.ok) {
+    throw new Error(resData.message);
+  } else {
+    return resData.data;
+  }
+};
