@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Session } from "next-auth";
 import JoinCommunityButton from "./JoinButton";
 import { getUserCommunities } from "@/services/community";
+import CreatePostButton from "./CreatePostButton";
 
 type CommunityPageActionProps = {
   session: Session | null;
@@ -30,9 +31,7 @@ export default async function CommunityPageAction({
 
   return (
     <div className="space-x-2">
-      <Button variant={"outline"} disabled={!session}>
-        Create Post
-      </Button>
+      <CreatePostButton session={session} />
       {!isOwner && (
         <JoinCommunityButton
           disabled={!session}

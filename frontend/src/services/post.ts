@@ -1,6 +1,12 @@
 "use server";
 
-export default async function getPost(postId: string) {
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
+import { FieldValues } from "react-hook-form";
+
+export async function getPost(postId: string) {
   const res = await fetch(
     `http://localhost:8000/api/post/${postId}?includeComments=true`,
     {
@@ -21,4 +27,35 @@ export default async function getPost(postId: string) {
   }
 
   return resData.data;
+}
+
+export async function createPost({
+  data,
+  communityId,
+}: {
+  data: FieldValues;
+  communityId: string;
+}) {
+  const session = await getServerSession(authOptions);
+
+  const res = await fetch("http://localhost:8000/api/post/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${session?.user.token}`,
+    },
+    body: JSON.stringify({ ...data, communityId }),
+  });
+
+  const resData = await res.json();
+
+  if (!res.ok) {
+    throw new Error(resData.message);
+  }
+  revalidateTag("CommunityPosts");
+  if (resData.success) {
+    redirect(`/community/${communityId}/comments/${resData.data?.id}`);
+  }
+  return resData;
 }
