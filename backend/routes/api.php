@@ -33,6 +33,7 @@ Route::post('/logout', AuthController::class . '@logout')->middleware('auth:sanc
 Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
     // Route::post('/{username}', UserController::class . '@getUserProfile');
     Route::post('/{id}', UserController::class . '@getUserWithId')->where('id', '[0-9]+');
+    Route::post('/myFeed', PostController::class . '@generateFeed');
     // User Profiles
     Route::post('/updateDisplayName', UserController::class . '@updateDisplayName');
     Route::post('/updateAvatar', UserController::class . '@updateAvatar');
