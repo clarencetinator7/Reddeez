@@ -137,7 +137,7 @@ class CommunityController extends Controller
             $query->where('status', 'D');
         }]);
 
-        return new PostCollection($posts->paginate(10));
+        return new PostCollection($posts->paginate(6));
         // return $posts->paginate(10);
     }
 

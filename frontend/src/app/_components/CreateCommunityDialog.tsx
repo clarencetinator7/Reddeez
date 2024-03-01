@@ -33,7 +33,6 @@ export default function CreateCommunityDialog({
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     const resData = await createCommunity(data);
-    console.log(resData);
     setIsLoading(false);
     if (resData.success) {
       reset();
