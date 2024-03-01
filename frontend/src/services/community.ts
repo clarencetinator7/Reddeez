@@ -150,7 +150,8 @@ export const getCommunityPosts = async (id: string, page = 1) => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      next: { tags: ["CommunityPosts"] },
+      cache: "no-cache",
+      // next: { tags: ["CommunityPosts"] },
     }
   );
 
