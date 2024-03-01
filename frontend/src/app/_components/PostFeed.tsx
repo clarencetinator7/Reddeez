@@ -1,20 +1,16 @@
 "use client";
-import PostItem from "./PostItem";
-import { useInView } from "react-intersection-observer";
-import { useCallback, useEffect, useState } from "react";
-import { getCommunityPosts } from "@/services/community";
 
-type CommunityFeedProps = {
+import PostItem from "@/components/Posts/PostItem";
+import { getFeed } from "@/services/post";
+import { useCallback, useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+
+type PostFeedProps = {
   initialPosts: Post[];
   meta: any;
-  communityId: string;
 };
 
-export default function CommunityPostFeed({
-  initialPosts,
-  meta,
-  communityId,
-}: CommunityFeedProps) {
+export default function PostFeed({ initialPosts, meta }: PostFeedProps) {
   const lastPage = meta.last_page || 1;
 
   const [page, setPage] = useState(1);
@@ -24,12 +20,11 @@ export default function CommunityPostFeed({
   const loadMore = useCallback(async () => {
     const nextPage = page + 1;
     if (page <= lastPage) {
-      // load more posts
       setPage(nextPage);
-      const { data } = await getCommunityPosts(communityId, nextPage);
+      const { data } = await getFeed(nextPage);
       setPosts((prev) => [...prev, ...data]);
     }
-  }, [page, lastPage, communityId]);
+  }, [page, lastPage]);
 
   useEffect(() => {
     if (inView) {
@@ -38,9 +33,9 @@ export default function CommunityPostFeed({
   }, [inView, loadMore]);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="w-full max-w-[900px] flex flex-col gap-3">
       {posts.map((post) => (
-        <PostItem key={post.id} post={post} />
+        <PostItem key={post.id} post={post} fromIndex />
       ))}
       {page < lastPage && (
         <div ref={ref} className="text-center">

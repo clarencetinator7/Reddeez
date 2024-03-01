@@ -58,3 +58,33 @@ export async function createPost({
   }
   return resData;
 }
+
+export async function getFeed(page = 1) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    // ...
+    return;
+  }
+
+  const res = await fetch(
+    `http://localhost:8000/api/user/myFeed?page=${page}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${session.user.token}`,
+      },
+      cache: "no-store",
+    }
+  );
+
+  const resData = await res.json();
+
+  if (!res.ok) {
+    throw new Error(resData.message);
+  }
+
+  return resData;
+}

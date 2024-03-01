@@ -5,21 +5,29 @@ import PostAction from "./PostAction";
 
 type PostItemProps = {
   post: Post;
+  fromIndex?: boolean;
 };
 
-export default function PostItem({ post }: PostItemProps) {
+export default function PostItem({ post, fromIndex }: PostItemProps) {
   return (
-    <PostItemContainer postId={post.id}>
+    <PostItemContainer post={post} fromIndex={fromIndex}>
       <div key={post.id} className="p-5 border rounded-md hover:bg-slate-50">
         <div className="flex items-center gap-2 mb-1">
           <Avatar className="w-5 h-5">
             <AvatarImage src={post.postedBy.avatar} alt="avatar" />
             <AvatarFallback>DN</AvatarFallback>
           </Avatar>
-          <span className="text-sm">
-            n/
-            <span>{post.postedBy.username}</span>
-          </span>
+
+          {fromIndex ? (
+            <span className="text-sm font-semibold">
+              <span>r/{post.community.name}</span>
+            </span>
+          ) : (
+            <span className="text-sm">
+              n/
+              <span>{post.postedBy.username}</span>
+            </span>
+          )}
           <span className="text-sm text-gray-500 space-x-1">
             <span className="text-gray-500">•</span>
             <span className="text-gray-500">

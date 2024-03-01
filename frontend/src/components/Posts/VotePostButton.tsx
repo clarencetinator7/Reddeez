@@ -61,8 +61,6 @@ export default function VotePostButton({
   let voteData: Vote | undefined;
   let voteStatus: "U" | "D" | undefined;
 
-  console.log(voteable);
-
   const [optimisticPost, setOptimisticPost] = useOptimistic(
     voteable,
     updatePostReducer
