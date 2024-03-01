@@ -131,7 +131,7 @@ class CommunityController extends Controller
 
     public function getCommunityPosts(Request $request)
     {
-        $posts = Community::findOrfail($request->id)->post()->withCount('comment')->with('user')->with("votes")->withCount(['votes as upvotes' => function ($query) {
+        $posts = Community::findOrfail($request->id)->post()->orderBy('created_at', 'desc')->withCount('comment')->with('user')->with("votes")->withCount(['votes as upvotes' => function ($query) {
             $query->where('status', 'U');
         }, 'votes as downvotes' => function ($query) {
             $query->where('status', 'D');
