@@ -22,7 +22,6 @@ export async function getPost(postId: string) {
   const resData = await res.json();
 
   if (!res.ok) {
-    console.log(resData);
     throw new Error(resData.message);
   }
 

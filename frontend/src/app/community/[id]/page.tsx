@@ -6,10 +6,11 @@ export default async function CommunityPage({
 }: {
   params: { id: string };
 }) {
-  const posts: Post[] = await getCommunityPosts(params.id);
+  const { data: posts, meta }: { data: Post[]; meta: any } =
+    await getCommunityPosts(params.id);
   return (
     <div className="flex-1">
-      <PostFeed posts={posts} />
+      <PostFeed initialPosts={posts} meta={meta} communityId={params.id} />
     </div>
   );
 }

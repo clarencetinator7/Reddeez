@@ -25,8 +25,6 @@ export const joinCommunity = async (communityId: string) => {
 
   const resData = await res.json();
 
-  console.log(resData);
-
   if (resData.success || res.ok) {
     revalidateTag("MyCommunities");
     return resData;
@@ -115,7 +113,6 @@ export const createCommunity = async (data: FieldValues) => {
   const resData = await res.json();
 
   if (!res.ok) {
-    console.log(resData);
     return {
       success: false,
       message: resData.message,
@@ -144,22 +141,28 @@ export const getCommunityById = async (id: string) => {
   }
 };
 
-export const getCommunityPosts = async (id: string) => {
-  const res = await fetch(`http://localhost:8000/api/community/${id}/posts`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    next: { tags: ["CommunityPosts"] },
-  });
+export const getCommunityPosts = async (id: string, page = 1) => {
+  const res = await fetch(
+    `http://localhost:8000/api/community/${id}/posts?page=${page}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      next: { tags: ["CommunityPosts"] },
+    }
+  );
 
   const resData = await res.json();
 
   if (!res.ok) {
     throw new Error(resData.message);
   } else {
-    return resData.data;
+    return {
+      data: resData.data,
+      meta: resData.meta,
+    };
   }
 };
 
