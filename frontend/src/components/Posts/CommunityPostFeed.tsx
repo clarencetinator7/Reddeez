@@ -10,7 +10,7 @@ type PostFeedProps = {
   communityId: string;
 };
 
-export default function PostFeed({
+export default function CommunityPostFeed({
   initialPosts,
   meta,
   communityId,

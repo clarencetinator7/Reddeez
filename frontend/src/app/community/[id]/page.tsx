@@ -1,4 +1,4 @@
-import PostFeed from "@/components/Posts/PostFeed";
+import CommunityPostFeed from "@/components/Posts/CommunityPostFeed";
 import { getCommunityPosts } from "@/services/community";
 
 export default async function CommunityPage({
@@ -10,7 +10,11 @@ export default async function CommunityPage({
     await getCommunityPosts(params.id);
   return (
     <div className="flex-1">
-      <PostFeed initialPosts={posts} meta={meta} communityId={params.id} />
+      <CommunityPostFeed
+        initialPosts={posts}
+        meta={meta}
+        communityId={params.id}
+      />
     </div>
   );
 }
