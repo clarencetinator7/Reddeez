@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
 use App\Models\Community;
 use App\Models\User;
@@ -111,6 +112,51 @@ class PostController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Post archived'
+        ], 200);
+    }
+
+    public function generateFeed(Request $request)
+    {
+        // Get the user
+        $user = User::findOrfail(auth()->id());
+
+        // Get the communities the user has joined 
+        $communities = $user->joinedCommunities()->get();
+
+        // Get the user own community
+        $userCommunity = $user->community()->get();
+
+        // Merge the user community with the joined communities
+        $communities = $communities->merge($userCommunity);
+
+        // Get the posts from the communities
+        $posts = Post::with(['user', 'votes', 'community'])->whereIn('community_id', $communities->pluck('id'))->withCount(['votes as upvotes' => function ($query) {
+            $query->where('status', 'U');
+        }, 'votes as downvotes' => function ($query) {
+            $query->where('status', 'D');
+        }])->orderBy('created_at', 'desc')->orderBy('upvotes', 'desc');
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Feed generated',
+        //     // 'data' => PostResource::collection($posts->paginate(10))
+        //     'data' => new PostCollection($posts->paginate(10))
+        // ], 200);
+        return new PostCollection($posts->paginate(10));
+    }
+
+    public function generateFeedNoAuth(Request $request)
+    {
+        $posts = Post::with(['user', 'votes', 'community'])->get()->loadCount(['votes as upvotes' => function ($query) {
+            $query->where('status', 'U');
+        }, 'votes as downvotes' => function ($query) {
+            $query->where('status', 'D');
+        }]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Feed generated',
+            'data' => PostResource::collection($posts)
         ], 200);
     }
 }

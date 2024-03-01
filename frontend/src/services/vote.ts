@@ -2,7 +2,7 @@
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function vote(
   voteId: string,
@@ -30,7 +30,7 @@ export async function vote(
   const resData = await res.json();
 
   if (resData.success || res.ok) {
-    revalidateTag("CommunityPosts");
+    revalidateTag("Post");
     return resData;
   } else {
     throw new Error(resData.message);

@@ -1,17 +1,24 @@
 "use client";
+import { url } from "inspector";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 type PostItemContainer = {
-  postId: string;
+  post: Post;
   children: React.ReactNode;
+  fromIndex?: boolean;
 };
 
 export default function PostItemContainer({
-  postId,
+  post,
   children,
+  fromIndex,
 }: PostItemContainer) {
   const path = usePathname();
 
-  return <Link href={`${path}/comments/${postId}`}>{children}</Link>;
+  const urlPath = fromIndex
+    ? `/community/${post.communityId}/comments/${post.id}`
+    : `${path}/comments/${post.id}`;
+
+  return <Link href={urlPath}>{children}</Link>;
 }

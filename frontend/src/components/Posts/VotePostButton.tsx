@@ -1,6 +1,7 @@
 "use client";
 import { vote } from "@/services/vote";
 import { LucideArrowBigDown, LucideArrowBigUp } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useOptimistic, useState, useTransition } from "react";
 
 type VotePostProps = {
@@ -65,7 +66,6 @@ export default function VotePostButton({
     updatePostReducer
   );
   const [, startTransition] = useTransition();
-  const [isLoading, setIsLoading] = useState(false);
 
   if (userId && optimisticPost.votes.some((vote) => vote.userId === userId)) {
     voteData = optimisticPost.votes.find((vote) => vote.userId === userId);
@@ -74,10 +74,13 @@ export default function VotePostButton({
 
   const onVoteHandler = async (voteStatus: "U" | "D") => {
     if (!userId) return;
-    setIsLoading(true);
     setOptimisticPost({ voteStatus, userId });
-    await vote(voteable.id, voteStatus.toLowerCase(), voteableType);
-    setIsLoading(false);
+    const stat = await vote(
+      voteable.id,
+      voteStatus.toLowerCase(),
+      voteableType
+    );
+    console.log(stat);
   };
 
   return (
@@ -92,7 +95,7 @@ export default function VotePostButton({
             ? "text-amber-500"
             : "text-gray-500 hover:text-amber-500"
         }`}
-        disabled={!userId || isLoading}
+        disabled={!userId}
         onClick={(e) => {
           e.preventDefault();
           startTransition(() => onVoteHandler("U"));
@@ -117,7 +120,7 @@ export default function VotePostButton({
           e.preventDefault();
           startTransition(() => onVoteHandler("D"));
         }}
-        disabled={!userId || isLoading}
+        disabled={!userId}
       >
         <LucideArrowBigDown className="w-6 h-6" />
       </button>
