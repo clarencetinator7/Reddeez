@@ -196,4 +196,12 @@ class CommunityController extends Controller
             'message' => 'User left community',
         ], 200);
     }
+
+    public function searchCommunity(Request $request)
+    {
+        $query = $request->query('q');
+        $communities = Community::where('name', 'like', '%' . $query . '%')->paginate(10);
+
+        return new CommunityCollection($communities);
+    }
 }
