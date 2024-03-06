@@ -64,7 +64,7 @@ export async function getFeed(page = 1) {
 
   if (!session) {
     // ...
-    return;
+    return { data: [], meta: {} };
   }
 
   const res = await fetch(
