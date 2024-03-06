@@ -17,9 +17,6 @@ export default async function Navbar() {
         <CommunitySearchBar />
         <nav>
           <ul className="flex space-x-5 items-center">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
             {session ? (
               <li>
                 <LogoutButton />
