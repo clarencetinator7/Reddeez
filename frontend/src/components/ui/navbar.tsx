@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import LogoutButton from "./LogoutButton";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import CommunitySearchBar from "@/app/_components/CommunitySearchBar";
+import ProfileButton from "./AccountButton";
 
 export default async function Navbar() {
   // const { data: session } = useSession();
@@ -19,7 +20,7 @@ export default async function Navbar() {
           <ul className="flex space-x-5 items-center">
             {session ? (
               <li>
-                <LogoutButton />
+                <ProfileButton />
               </li>
             ) : (
               <>

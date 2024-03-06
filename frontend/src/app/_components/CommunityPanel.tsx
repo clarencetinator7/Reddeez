@@ -3,9 +3,6 @@ import TopCommunities from "./TopCommunities";
 import JoinedCommunities from "./JoinedCommunities";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 import MyCommunities from "./MyCommunities";
-import Link from "next/link";
-import { LucideHome } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import HomeButton from "./HomeButton";
 
 export default async function CommunityPanel() {
