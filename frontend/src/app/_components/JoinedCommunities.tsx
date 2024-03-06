@@ -1,5 +1,4 @@
 import { Session } from "next-auth";
-import Link from "next/link";
 import CommunityList from "./CommunityList";
 
 type MyCommunitiesProps = {
@@ -31,16 +30,12 @@ export default async function JoinedCommunities({
   const myCommunity: Community[] = await getMyCommunities(session!);
   return (
     <div className="mb-5">
-      {/* <h3 className="text-sm text-gray-500 tracking-wide">YOUR COMMUNITIES</h3> */}
-
       {myCommunity.length === 0 ? (
         <p className="text-sm text-gray-500">
           You are not a member of any community :&lt;
         </p>
       ) : (
-        <CommunityList communities={myCommunity}>
-          JOINED COMMUNITIES
-        </CommunityList>
+        <CommunityList communities={myCommunity}>JOINED</CommunityList>
       )}
     </div>
   );
