@@ -19,3 +19,30 @@ export async function logout() {
 
   return { success: false };
 }
+
+export async function getUserData() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("No session found");
+  }
+
+  const res = await fetch("http://localhost:8000/api/user", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${session?.user.token}`,
+    },
+  });
+
+  const resData = await res.json();
+
+  if(!res.ok) {
+    throw new Error(resData.message);
+  }
+
+  return resData;
+
+
+}

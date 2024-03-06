@@ -66,6 +66,7 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
 });
 Route::group(['prefix' => 'post'], function () {
     Route::post('/{id}', PostController::class . '@getPost')->where('id', '[0-9]+');
+    Route::post('/feed', PostController::class . '@generateFeedNoAuth');
 });
 
 Route::group(['prefix' => 'comment', 'middleware' => 'auth:sanctum'], function () {

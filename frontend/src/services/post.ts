@@ -63,8 +63,25 @@ export async function getFeed(page = 1) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    // ...
-    return;
+    const res = await fetch(
+      `http://localhost:8000/api/post/feed?page=${page}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    const resData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(resData.message);
+    }
+
+    return resData;
   }
 
   const res = await fetch(
